@@ -70,6 +70,7 @@ let config = {
       names: ['vendors'],
       filename: 'renderer/js/[name].min.js'
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, '../dist/index.html'),
       template: path.resolve(__dirname, '../src/index.html'),
