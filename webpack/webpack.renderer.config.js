@@ -1,20 +1,20 @@
 const path = require('path');
+const webpack = require('webpack');
 const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const __DEBUG__ = process.env.__DEBUG__ !== 'false';
+const hash = moment().format('YYMMDDHHmm');
 
 let config = {
   entry: {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
-    vendors: [
-      'vue', 'lodash'
-    ]
+    vendors: [ 'vue', 'lodash' ]
   },
   output: {
-    filename: 'app.min.js',
-    path: path.resolve(__dirname, '../dist')
+    filename: `renderer/js/[name].min.js?${hash}`,
+    path: path.resolve(__dirname, '../dist'),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
   target: 'electron-renderer',
@@ -22,11 +22,11 @@ let config = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          exclude: /node_modules/,
           options: {
-            presets: ['stage-0', ['env', {modules: false}]]
+            presets: ['stage-0']
           }
         }
       },
@@ -59,10 +59,22 @@ let config = {
       },
     ]
   },
+  resolve: {
+    alias: {
+      vue: 'vue/dist/vue.js',
+      '@': path.join(__dirname, '../src/renderer'),
+    }
+  },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendors'],
+      filename: 'renderer/js/[name].min.js'
+    }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'dist/index.html'),
-      template: path.resolve(__dirname, 'src/index.html'),
+      filename: path.resolve(__dirname, '../dist/index.html'),
+      template: path.resolve(__dirname, '../src/index.html'),
     })
   ]
 };
+
+module.exports = config;

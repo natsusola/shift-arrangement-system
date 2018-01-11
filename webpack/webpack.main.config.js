@@ -6,7 +6,7 @@ let config = {
   },
   output: {
     filename: 'main.min.js',
-    path: path.resolve(__dirname, '../dist')
+    path: path.join(__dirname, '../dist')
   },
   module: {
     rules: [
@@ -16,11 +16,18 @@ let config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['stage-0', ['env', {target: {node: 7}}]]
+            presets: ['stage-0']
           }
         }
+      },
+      {
+        test: /\.node$/,
+        use: 'node-loader'
       }
     ]
+  },
+  node: {
+    __dirname: true
   },
   target: 'electron-main',
 };
