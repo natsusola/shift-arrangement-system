@@ -23,6 +23,7 @@ let config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
+        include: [ require.resolve("bootstrap-vue") ],
         use: {
           loader: 'babel-loader',
           options: {
@@ -48,6 +49,13 @@ let config = {
           { loader: 'style-loader' },
           { loader: 'css-loader', options: { minimize: !__DEBUG__ } },
           { loader: 'sass-loader' },
+        ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
         ]
       },
       {
