@@ -1,11 +1,11 @@
 <template>
-  <div class="content">
-    <router-view></router-view>
+  <div>
+    Hi Detail
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Vue'
+
   }
 </script>

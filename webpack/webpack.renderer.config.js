@@ -17,7 +17,7 @@ let config = {
     path: path.resolve(__dirname, '../dist'),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
-  target: 'electron-renderer',
+  // target: 'electron-renderer',
   module: {
     rules: [
       {
@@ -35,7 +35,7 @@ let config = {
         use: {
           loader: 'vue-loader',
           options: {
-            extractCSS: __DEBUG__,
+            extractCSS: false,
             loaders: {
               scss: 'vue-style-loader!css-loader!sass-loader'
             }
@@ -62,8 +62,9 @@ let config = {
   resolve: {
     alias: {
       vue: 'vue/dist/vue.js',
-      '@': path.join(__dirname, '../src/renderer'),
-    }
+      '@': path.resolve(__dirname, '../src/renderer'),
+    },
+    extensions: ['.js', '.vue', '.json', '.scss']
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({

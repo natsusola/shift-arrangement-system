@@ -40,6 +40,8 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap-vue": "^1.4.0",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "vue": "^2.5.13",
