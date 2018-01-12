@@ -6,24 +6,37 @@ const BrowserWindow = electron.BrowserWindow
 
 const path = require('path')
 const url = require('url')
+const windowStateKeeper = require('electron-window-state');
 require('electron-debug')({ showDevTools: true })
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let win
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1400, height: 900})
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1400,
+    defaultHeight: 900
+  });
+
+  mainWindow = new BrowserWindow({
+    width: 1400,
+    height: 900,
+    // loadURL: 'http://localhost:8080',
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+  })
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, '../../dist', 'index.html'),
-    // pathname: `file://${__dirname}/index.html`,
-    protocol: 'file:',
-    slashes: true
-  }))
-
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.resolve(__dirname, '../../dist', 'index.html'),
+  //   // pathname: `file://${__dirname}/index.html`,
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
+  mainWindow.loadURL('http://localhost:8080')
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
@@ -34,6 +47,7 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+  mainWindowState.manage(mainWindow);
 }
 
 // This method will be called when Electron has finished

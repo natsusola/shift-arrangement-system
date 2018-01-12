@@ -17,12 +17,13 @@ let config = {
     path: path.resolve(__dirname, '../dist'),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
-  target: 'electron-renderer',
+  // target: 'electron-renderer',
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
+        include: [ require.resolve("bootstrap-vue") ],
         use: {
           loader: 'babel-loader',
           options: {
@@ -35,7 +36,7 @@ let config = {
         use: {
           loader: 'vue-loader',
           options: {
-            extractCSS: __DEBUG__,
+            extractCSS: false,
             loaders: {
               scss: 'vue-style-loader!css-loader!sass-loader'
             }
@@ -51,6 +52,13 @@ let config = {
         ]
       },
       {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
+        ]
+      },
+      {
         test: /\.(png|gif|jpg|svg|ttf|woff|woff2|otf|eot)$/,
         use: {
           loader: 'file-loader',
@@ -62,14 +70,16 @@ let config = {
   resolve: {
     alias: {
       vue: 'vue/dist/vue.js',
-      '@': path.join(__dirname, '../src/renderer'),
-    }
+      '@': path.resolve(__dirname, '../src/renderer'),
+    },
+    extensions: ['.js', '.vue', '.json', '.scss']
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
       filename: 'renderer/js/[name].min.js'
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, '../dist/index.html'),
       template: path.resolve(__dirname, '../src/index.html'),
