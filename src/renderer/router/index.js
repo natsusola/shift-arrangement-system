@@ -10,7 +10,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'homePage',
+      name: 'dashboard',
       component: HomePage
     },
     {

@@ -1,0 +1,37 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+$directions: (
+  top: 't',
+  bottom: 'b',
+  left: 'l',
+  right: 'r'
+);
+
+@for $i from 0 through 20 {
+  .p-px-#{$i*5} {
+    padding: 5px * $i;
+  }
+
+  .m-px-#{$i*5} {
+    margin: 5px * $i;
+  }
+
+  @each $key, $value in $directions {
+    .p-#{$value}-px-#{$i*5} {
+      padding-#{$key}: 5px * $i;
+    }
+
+    .m-#{$value}-px-#{$i*5} {
+      margin-#{$key}: 5px * $i;
+    }
+  }
+}

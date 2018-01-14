@@ -1,6 +1,6 @@
 <template>
-  <div class="wrap">
-    <div @click="doClick($event, 'hi')">Home {{name}}</div>
+  <div class="home-wrap">
+    <div @click="doClick($event, 'hi')">Home</div>
     <router-link :to="{ name: 'detail', params: {id: 1} }">
       goto
     </router-link>
@@ -9,8 +9,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-  
   export default {
     name: 'home',
     data() {

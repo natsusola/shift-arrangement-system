@@ -30,6 +30,8 @@
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "node-loader": "^0.6.0",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.7.0",
@@ -42,8 +44,11 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "^1.4.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
+    "popper.js": "^1.12.9",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1"
   }
