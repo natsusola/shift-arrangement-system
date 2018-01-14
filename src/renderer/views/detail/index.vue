@@ -20,15 +20,18 @@
     </form>
     <div class="">
       <div class="row">
-        <div class="col-4">
+        <div class="col-3">
+          <div class="m-b-px-10">人員名單(<span>清除全部</span>)：</div>
           <ul class="member-list">
             <li class="member-item row" v-for="(member, index) in members">
-              <div class="col-8 p-l-px-0">
+              <div class="col-10 p-l-px-0">
+                <span class="member-index">{{index + 1}}.</span>
                 <span class="member-name">{{member.name}}</span>
-                <span class="member-id">({{member.id}})</span>
-                <span class="member-id">: {{member.count}}</span>
+                -
+                <span class="member-id">{{member.id}}</span>
+                <span class="member-id">({{member.count}})</span>
               </div>
-              <span class="member-id" @click="doRemoveMember(index)">
+              <span class="icon-btn icon-rm" @click="doRemoveMember(index)">
                 <i class="fa fa-times" aria-hidden="true"></i>
               </span>
             </li>
@@ -53,12 +56,16 @@
                     v-model="memberForm.id"
                     placeholder="手機或email">
                 </div>
-                <button class="btn btn-secondary">新增</button>
+                <button class="btn btn-secondary" :disabled="!this.memberForm.name || !this.memberForm.id">新增</button>
               </div>
             </div>
           </form>
+          <div>
+            <input type="file" class="form-control" @change="memberFile"/>
+          </div>
         </div>
-        <div class="col-8">
+        <div class="col-9">
+          <div class="m-b-px-10">事件列表(<span>清除全部</span>)：</div>
           <table>
 
           </table>
@@ -87,10 +94,15 @@
         </div>
       </div>
     </div>
+    <div class="detail-footer">
+      <button class="btn btn-primary">存檔</button>
+      <button class="btn btn-default" @click="doBack">返回</button>
+    </div>
   </div>
 </template>
 
 <script>
+
   export default {
     data() {
       return {
@@ -108,7 +120,8 @@
         },
         members: [],
         events: [],
-      }
+        memberFile: {}
+      };
     },
     methods: {
       doAddMember() {
@@ -124,7 +137,13 @@
       },
       doRemoveEvent() {
 
+      },
+      onUploadMemberFile() {
+
+      },
+      doBack() {
+        this.$router.go(-1);
       }
-    }
+    },
   }
 </script>
