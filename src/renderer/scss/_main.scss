@@ -1,0 +1,35 @@
+.__layout {
+  padding: 20px;
+}
+
+.form-row {
+  margin: 0;
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.form-control, .btn {
+  padding: 0.175rem 0.375rem;
+}
+
+.form-group.row {
+  align-items: center;
+}
+
+.icon-btn {
+  cursor: pointer;
+}
+
+.icon-rm {
+  color: #aaa;
+  &:hover {
+    color: red;
+  }
+}
+
+.btn {
+  cursor: pointer;
+}
