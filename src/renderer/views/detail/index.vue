@@ -5,19 +5,19 @@
       <div class="form-group row">
         <label for="p-name" class="col-1 col-form-label">名稱</label>
         <div class="col-3">
-          <input class="form-control" type="text" id="p-name" v-model="projectForm.name">
+          <input class="form-control" type="text" id="p-name" v-model.trim="projectForm.name">
         </div>
       </div>
       <div class="form-group row">
         <label for="p-desc" class="col-1 col-form-label">簡述</label>
         <div class="col-5">
-          <input class="form-control" type="text" id="p-desc" v-model="projectForm.desc">
+          <input class="form-control" type="text" id="p-desc" v-model.trim="projectForm.desc">
         </div>
         <div class="col-6">
           <button class="btn btn-success"
             @click="doShift"
             :disabled="canDoShift">
-            開始排班
+            隨機排班
           </button>
         </div>
       </div>
@@ -58,7 +58,7 @@
                     type="text"
                     id="memberId"
                     v-model.trim="memberForm.id"
-                    placeholder="手機或email">
+                    placeholder="ID(手機或email)">
                 </div>
                 <button class="btn btn-success"
                   :disabled="!this.memberForm.name || !this.memberForm.id">
@@ -89,11 +89,11 @@
               <tr v-for="(event, eIndex) in events">
                 <td class="ta-r">{{eIndex + 1}}</td>
                 <td>{{event.name}}</td>
-                <td class="ta-r">{{`${event.members.length}/${event.memberCount}`}}</td>
+                <td class="ta-r">{{`${event.memberIds.length}/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
                   <div class="btn-group">
                     <button type="button" class="btn btn-secondary">
-                      Action
+                      {{event.memberIds[mIndex] ? event.memberIds[mIndex] : '-----'}}
                     </button>
                     <button type="button"
                       class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
@@ -103,11 +103,16 @@
                       <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Action</a>
+                      <!-- <input type="text" /> -->
+                      <a class="dropdown-item" href="#">
+                        移除
+                      </a>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                      <a class="dropdown-item" href="#">Separated link</a>
+                      <a class="dropdown-item" href="#"
+                        v-for="(mo, moIndex) in pickMemberOptions(event)"
+                        @click="doPickMember(event, eIndex, mIndex, mo.id)">
+                        {{`${mo.name}-${mo.id}(${mo.count})`}}
+                      </a>
                     </div>
                   </div>
                 </td>
@@ -133,6 +138,7 @@
                     type="number"
                     id="eventId"
                     min="0"
+                    :max="members.length"
                     v-model.number="eventForm.memberCount"
                     placeholder="需求人數">
                 </div>
@@ -168,7 +174,7 @@
         eventForm: {
           name: '',
           memberCount: undefined,
-          members: []
+          memberIds: []
         },
         members: [],
         membersIndex: {},
@@ -178,12 +184,14 @@
           tableMaxCount: 0
         },
         eventTable: {
-          maxCount: 0
+          maxCount: 0,
+
         },
       };
     },
     methods: {
       doAddMember() {
+        if (this.membersIndex[this.memberForm.id]) return;
         this.membersIndex[this.memberForm.id] = {...this.memberForm, count: 0};
         this.members.push(this.membersIndex[this.memberForm.id]);
         this.memberForm = {};
@@ -205,17 +213,30 @@
       onUploadMemberFile() {
 
       },
+      doPickMember(event, ePos, mPos, mid) {
+        let _tmp = this.events[ePos];
+        if (this.events[ePos].memberIds[mPos]) this.membersIndex[this.events[ePos].memberIds[mPos]].count--;
+        _tmp.memberIds[mPos] = mid;
+        this.membersIndex[mid].count++;
+        this.events[ePos] = _tmp;
+      },
       doBack() {
         this.$router.go(-1);
       },
       doShift() {
 
       },
+      pickMemberOptions(event) {
+        return _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+      },
     },
     computed: {
       canDoShift() {
         return this.members.length >= _.reduce(this.events, (e, sum) => sum + e.memberCount, 0);
-      }
+      },
+    },
+    filters: {
+
     }
   }
 </script>
