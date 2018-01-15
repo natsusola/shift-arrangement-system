@@ -1,9 +1,6 @@
 <template>
   <div class="detail-wrap">
     <h3>編輯</h3>
-    <router-link :to="{ name: 'dashboard' }">
-      back
-    </router-link>
     <form name="projectForm">
       <div class="form-group row">
         <label for="p-name" class="col-1 col-form-label">名稱</label>
@@ -56,12 +53,15 @@
                     v-model="memberForm.id"
                     placeholder="手機或email">
                 </div>
-                <button class="btn btn-secondary" :disabled="!this.memberForm.name || !this.memberForm.id">新增</button>
+                <button class="btn btn-success" :disabled="!this.memberForm.name || !this.memberForm.id">新增</button>
               </div>
             </div>
           </form>
           <div>
-            <input type="file" class="form-control" @change="memberFile"/>
+            <div class="form-group row">
+              <label for="p-name" class="col-form-label">Excel 匯入：</label>
+              <input type="file" class="form-control" style="flex:1" @change="memberFile"/>
+            </div>
           </div>
         </div>
         <div class="col-9">
@@ -87,7 +87,7 @@
                     min="0"
                     placeholder="需求人數">
                 </div>
-                <button class="btn btn-secondary">新增</button>
+                <button class="btn btn-success">新增</button>
               </div>
             </div>
           </form>
@@ -95,8 +95,8 @@
       </div>
     </div>
     <div class="detail-footer">
-      <button class="btn btn-primary">存檔</button>
-      <button class="btn btn-default" @click="doBack">返回</button>
+      <button class="btn btn-primary m-r-px-20">存檔</button>
+      <button class="btn btn-secondary" @click="doBack">返回</button>
     </div>
   </div>
 </template>
