@@ -76,19 +76,41 @@
         </div>
         <div class="col-9">
           <div class="m-b-px-10">事件列表(<span>清除全部</span>)：</div>
-          <table class="table table-bordered" style="table-layout: fixed;">
+          <table class="table table-bordered event-table" style="table-layout: fixed;">
             <thead class="thead-default">
               <tr>
-                <th style="width: 30px">#</th>
+                <th class="ta-r" style="width: 40px">#</th>
                 <th>活動名稱</th>
+                <th class="ta-r" style="width: 120px">人數(選/全)</th>
                 <th v-for="n in eventTable.maxCount">人員{{n}}</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(event, index) in events">
-                <td>{{index + 1}}</td>
+              <tr v-for="(event, eIndex) in events">
+                <td class="ta-r">{{eIndex + 1}}</td>
                 <td>{{event.name}}</td>
-                <td v-for="m in event.memberCount"></td>
+                <td class="ta-r">{{`${event.members.length}/${event.memberCount}`}}</td>
+                <td v-for="(m, mIndex) in event.memberCount">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary">
+                      Action
+                    </button>
+                    <button type="button"
+                      class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false">
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                      <a class="dropdown-item" href="#">Separated link</a>
+                    </div>
+                  </div>
+                </td>
                 <td v-if="eventTable.maxCount > event.memberCount" :colspan="eventTable.maxCount - event.memberCount"></td>
               </tr>
             </tbody>
@@ -172,7 +194,7 @@
         this.members.splice(index, 1);
       },
       doAddEvent() {
-        this.events.push(this.eventForm);
+        this.events.push({...this.eventForm, memberIds: []});
         this.eventTable.maxCount = this.eventForm.memberCount > this.eventTable.maxCount ? this.eventForm.memberCount : this.eventTable.maxCount;
         this.eventForm = {};
         this.$refs.eventName.focus();
