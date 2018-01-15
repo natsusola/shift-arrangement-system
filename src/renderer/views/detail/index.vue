@@ -41,7 +41,7 @@
                     class="form-control"
                     type="text"
                     id="memberName"
-                    v-model="memberForm.name"
+                    v-model.trim="memberForm.name"
                     ref="memberName"
                     placeholder="姓名">
                 </div>
@@ -50,10 +50,13 @@
                     class="form-control"
                     type="text"
                     id="memberId"
-                    v-model="memberForm.id"
+                    v-model.trim="memberForm.id"
                     placeholder="手機或email">
                 </div>
-                <button class="btn btn-success" :disabled="!this.memberForm.name || !this.memberForm.id">新增</button>
+                <button class="btn btn-success"
+                  :disabled="!this.memberForm.name || !this.memberForm.id">
+                  新增
+                </button>
               </div>
             </div>
           </form>
@@ -66,10 +69,24 @@
         </div>
         <div class="col-9">
           <div class="m-b-px-10">事件列表(<span>清除全部</span>)：</div>
-          <table>
-
+          <table class="table table-bordered" style="table-layout: fixed;">
+            <thead class="thead-default">
+              <tr>
+                <th style="width: 30px">#</th>
+                <th>活動名稱</th>
+                <th v-for="n in eventTable.maxCount">人員{{n}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(event, index) in events">
+                <td>{{index + 1}}</td>
+                <td>{{event.name}}</td>
+                <td v-for="m in event.memberCount"></td>
+                <td v-if="eventTable.maxCount > event.memberCount" :colspan="eventTable.maxCount - event.memberCount"></td>
+              </tr>
+            </tbody>
           </table>
-          <form name="eventsForm">
+          <form name="eventsForm" @submit.prevent="doAddEvent">
             <div>
               <div class="form-group row">
                 <div class="col-4 p-px-0">
@@ -77,6 +94,8 @@
                     class="form-control"
                     type="text"
                     id="eventName"
+                    ref="eventName"
+                    v-model.trim="eventForm.name"
                     placeholder="活動名稱(時間)">
                 </div>
                 <div class="col-2">
@@ -85,9 +104,13 @@
                     type="number"
                     id="eventId"
                     min="0"
+                    v-model.number="eventForm.memberCount"
                     placeholder="需求人數">
                 </div>
-                <button class="btn btn-success">新增</button>
+                <button class="btn btn-success"
+                  :disabled="!this.eventForm.name || !this.eventForm.memberCount">
+                  新增
+                </button>
               </div>
             </div>
           </form>
@@ -116,11 +139,15 @@
         },
         eventForm: {
           name: '',
-          number: 0
+          memberCount: undefined,
+          members: []
         },
         members: [],
         events: [],
-        memberFile: {}
+        memberFile: {},
+        eventTable: {
+          maxCount: 0
+        },
       };
     },
     methods: {
@@ -133,7 +160,10 @@
         this.members.splice(index, 1);
       },
       doAddEvent() {
-
+        this.events.push(this.eventForm);
+        this.eventTable.maxCount = this.eventForm.memberCount > this.eventTable.maxCount ? this.eventForm.memberCount : this.eventTable.maxCount;
+        this.eventForm = {};
+        this.$refs.eventName.focus();
       },
       doRemoveEvent() {
 
