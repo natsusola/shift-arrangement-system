@@ -1,7 +1,7 @@
 <template>
   <div class="detail-wrap">
     <h3>編輯</h3>
-    <form name="projectForm">
+    <form name="projectForm" @submit.prevent>
       <div class="form-group row">
         <label for="p-name" class="col-1 col-form-label">名稱</label>
         <div class="col-3">
@@ -12,6 +12,13 @@
         <label for="p-desc" class="col-1 col-form-label">簡述</label>
         <div class="col-5">
           <input class="form-control" type="text" id="p-desc" v-model="projectForm.desc">
+        </div>
+        <div class="col-6">
+          <button class="btn btn-success"
+            @click="doShift"
+            :disabled="canDoShift">
+            開始排班
+          </button>
         </div>
       </div>
     </form>
@@ -28,7 +35,7 @@
                 <span class="member-id">{{member.id}}</span>
                 <span class="member-id">({{member.count}})</span>
               </div>
-              <span class="icon-btn icon-rm" @click="doRemoveMember(index)">
+              <span class="icon-btn icon-rm" @click="doRemoveMember(index, member.id)">
                 <i class="fa fa-times" aria-hidden="true"></i>
               </span>
             </li>
@@ -125,7 +132,6 @@
 </template>
 
 <script>
-
   export default {
     data() {
       return {
@@ -143,8 +149,12 @@
           members: []
         },
         members: [],
+        membersIndex: {},
         events: [],
         memberFile: {},
+        layout: {
+          tableMaxCount: 0
+        },
         eventTable: {
           maxCount: 0
         },
@@ -152,11 +162,13 @@
     },
     methods: {
       doAddMember() {
-        this.members.push(this.memberForm);
+        this.membersIndex[this.memberForm.id] = {...this.memberForm, count: 0};
+        this.members.push(this.membersIndex[this.memberForm.id]);
         this.memberForm = {};
         this.$refs.memberName.focus();
       },
-      doRemoveMember(index) {
+      doRemoveMember(index, memberId) {
+        delete this.membersIndex[memberId];
         this.members.splice(index, 1);
       },
       doAddEvent() {
@@ -173,7 +185,15 @@
       },
       doBack() {
         this.$router.go(-1);
-      }
+      },
+      doShift() {
+
+      },
     },
+    computed: {
+      canDoShift() {
+        return this.members.length >= _.reduce(this.events, (e, sum) => sum + e.memberCount, 0);
+      }
+    }
   }
 </script>

@@ -32,7 +32,8 @@ let config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['stage-0']
+            presets: ['stage-0'],
+            plugins: ['transform-object-rest-spread']
           }
         }
       },
