@@ -80,7 +80,8 @@ let config = {
     new webpack.ProvidePlugin({
         $: 'jquery',
         jQuery: 'jquery',
-        Popper: 'popper.js'
+        Popper: 'popper.js',
+        Tether: 'tether',
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],

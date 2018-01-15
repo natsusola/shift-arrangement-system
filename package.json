@@ -42,13 +42,14 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap": "^4.0.0-alpha.6",
     "bootstrap-vue": "^1.4.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "popper.js": "^1.12.9",
+    "tether": "^1.4.3",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1"
   }
