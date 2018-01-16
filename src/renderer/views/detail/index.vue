@@ -15,8 +15,7 @@
         </div>
         <div class="col-6">
           <button class="btn btn-success m-r-px-10"
-            @click="doShift"
-            :disabled="canDoShift">
+            @click="doShift">
             隨機排班
           </button>
           <button class="btn btn-info"
@@ -95,6 +94,7 @@
                 <th></th>
                 <th class="ta-r" style="width: 120px">人數(選/全)</th>
                 <th v-for="n in eventTable.maxCount">人員{{n}}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -128,7 +128,12 @@
                     </button>
                     <div class="dropdown-menu">
                       <!-- <input type="text" /> TODO: Search Function-->
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="#"
+                        @click="doCleanEventMember(event, mIndex)">
+                        清空
+                      </a>
+                      <a v-if="event.memberIds[mIndex]" class="dropdown-item icon-btn icon-rm" href="#"
+                        @click="doRemoveEventMember(event, mIndex)">
                         移除
                       </a>
                       <div class="dropdown-divider"></div>
@@ -139,6 +144,11 @@
                       </a>
                     </div>
                   </div>
+                </td>
+                <td>
+                  <i class="fa fa-plus icon-btn" aria-hidden="true"
+                    @click="doAddEventMemberCount(eIndex)">
+                  </i>
                 </td>
                 <td v-if="eventTable.maxCount > event.memberCount" :colspan="eventTable.maxCount - event.memberCount"></td>
               </tr>
@@ -162,7 +172,6 @@
                     type="number"
                     id="eventId"
                     min="0"
-                    :max="members.length"
                     v-model.number="eventForm.memberCount"
                     placeholder="需求人數">
                 </div>
@@ -247,7 +256,21 @@
         });
         this.events.splice(ePos, 1);
         if (!this.events.length) this.eventTable.maxCount = 0;
-        else _.chain(this.events).map(e => e.memberCount).max().value();
+        else this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
+      },
+      doAddEventMemberCount(ePos) {
+        this.events[ePos].memberCount++;
+        if (this.events[ePos].memberCount > this.eventTable.maxCount) this.eventTable.maxCount = this.events[ePos].memberCount;
+      },
+      doRemoveEventMember(event, mPos) {
+        this.membersIndex[event.memberIds[mPos]].count--;
+        event.memberIds.splice(mPos, 1);
+        event.memberCount--;
+        this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
+      },
+      doCleanEventMember(event, mPos) {
+        this.membersIndex[event.memberIds[mPos]].count--;
+        event.memberIds[mPos] = '';
       },
       doPickMember(event, ePos, mPos, mid) {
         let _tmp = this.events[ePos];
@@ -264,7 +287,15 @@
         this.$router.go(-1);
       },
       doShift() {
-
+        for (let id in this.membersIndex) this.membersIndex[id].count = 0;
+        for (let i = 0; i < this.events.length; i++) {
+          this.events[i].memberIds = [];
+          let _members = _.chain(this.members).shuffle().orderBy(['count'], ['desc']).value();
+          for (let j = 0; j < this.events[i].memberCount && j < _members.length; j++) {
+            this.membersIndex[_members[j].id].count++;
+            this.events[i].memberIds.push(_members[j].id);
+          }
+        }
       },
       doExport() {
 
@@ -280,7 +311,6 @@
     },
     filters: {
       computeEventMembersLen(memberIds) {
-        console.log
         return _.filter(memberIds, mid => mid).length;
       }
     }
