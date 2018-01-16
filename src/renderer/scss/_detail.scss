@@ -1,3 +1,12 @@
+.detail-wrap {
+  overflow: scroll;
+  height: 100%;
+
+  .event-table {
+    width: initial;
+  }
+}
+
 .member-item {
   align-items: center;
   margin-bottom: 10px;
@@ -12,4 +21,9 @@
   background: #fff;
   border-top: 1px solid #aaa;
   text-align: right;
+}
+
+.btn + .dropdown-toggle-split {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }

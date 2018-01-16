@@ -32,7 +32,8 @@ let config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['stage-0']
+            presets: ['stage-0'],
+            plugins: ['transform-object-rest-spread']
           }
         }
       },
@@ -80,7 +81,8 @@ let config = {
     new webpack.ProvidePlugin({
         $: 'jquery',
         jQuery: 'jquery',
-        Popper: 'popper.js'
+        Popper: 'popper.js',
+        Tether: 'tether',
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
