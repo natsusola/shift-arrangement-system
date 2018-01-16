@@ -77,7 +77,9 @@
           <div>
             <div class="form-group row">
               <label for="p-name" class="col-form-label">Excel 匯入：</label>
-              <input type="file" class="form-control" style="flex:1" @change="memberFile"/>
+              <input type="file" class="form-control" style="flex:1"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                @change="onMemberExcelFile($event)"/>
             </div>
           </div>
         </div>
@@ -212,7 +214,6 @@
         members: [],
         membersIndex: {},
         events: [],
-        memberFile: {},
         layout: {
           tableMaxCount: 0
         },
@@ -300,6 +301,9 @@
       doExport() {
 
       },
+      onMemberExcelFile(e) {
+        console.log(e.target.files[0]);
+      }
     },
     computed: {
       canDoShift() {
