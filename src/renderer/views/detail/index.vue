@@ -14,10 +14,15 @@
           <input class="form-control" type="text" id="p-desc" v-model.trim="projectForm.desc">
         </div>
         <div class="col-6">
-          <button class="btn btn-success"
+          <button class="btn btn-success m-r-px-10"
             @click="doShift"
             :disabled="canDoShift">
             隨機排班
+          </button>
+          <button class="btn btn-info"
+            @click="doExport"
+            :disabled="canDoExport">
+            匯出 Excel
           </button>
         </div>
       </div>
@@ -25,7 +30,10 @@
     <div class="">
       <div class="row">
         <div class="col-3">
-          <div class="m-b-px-10">人員名單(<span>清除全部</span>)：</div>
+          <div class="m-b-px-10">
+            人員名單({{members.length}})：
+            <span>清除全部</span>
+          </div>
           <ul class="member-list">
             <li class="member-item row" v-for="(member, index) in members">
               <div class="col-10 p-l-px-0">
@@ -75,7 +83,10 @@
           </div>
         </div>
         <div class="col-9">
-          <div class="m-b-px-10">事件列表(<span>清除全部</span>)：</div>
+          <div class="m-b-px-10">
+            活動列表({{events.length}})：
+            <span>清除全部</span>
+          </div>
           <table class="table table-bordered event-table" style="table-layout: fixed;">
             <thead class="thead-default">
               <tr>
@@ -89,11 +100,18 @@
               <tr v-for="(event, eIndex) in events">
                 <td class="ta-r">{{eIndex + 1}}</td>
                 <td>{{event.name}}</td>
-                <td class="ta-r">{{`${event.memberIds.length}/${event.memberCount}`}}</td>
+                <td class="ta-r">{{event.memberIds | computeEventMembersLen}}{{`/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
                   <div class="btn-group">
                     <button type="button" class="btn btn-secondary">
-                      {{event.memberIds[mIndex] ? event.memberIds[mIndex] : '-----'}}
+                      <div v-if="!event.memberIds[mIndex]">-----</div>
+                      <div v-else>
+                        <div>
+                          {{membersIndex[event.memberIds[mIndex]].name}}
+                          ({{membersIndex[event.memberIds[mIndex]].count}})
+                        </div>
+                        <div>{{membersIndex[event.memberIds[mIndex]].id}}</div>
+                      </div>
                     </button>
                     <button type="button"
                       class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
@@ -103,7 +121,7 @@
                       <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <div class="dropdown-menu">
-                      <!-- <input type="text" /> -->
+                      <!-- <input type="text" /> TODO: Search Function-->
                       <a class="dropdown-item" href="#">
                         移除
                       </a>
@@ -190,6 +208,7 @@
       };
     },
     methods: {
+      /* Member UI Event*/
       doAddMember() {
         if (this.membersIndex[this.memberForm.id]) return;
         this.membersIndex[this.memberForm.id] = {...this.memberForm, count: 0};
@@ -200,7 +219,16 @@
       doRemoveMember(index, memberId) {
         delete this.membersIndex[memberId];
         this.members.splice(index, 1);
+        _.each(this.events, e => {
+          _.each(e.memberIds, (mid, mPos) => {
+            if (mid === memberId) e.memberIds[mPos] = '';
+          });
+        });
       },
+      onUploadMemberFile() {
+
+      },
+      /* Event UI Event*/
       doAddEvent() {
         this.events.push({...this.eventForm, memberIds: []});
         this.eventTable.maxCount = this.eventForm.memberCount > this.eventTable.maxCount ? this.eventForm.memberCount : this.eventTable.maxCount;
@@ -210,9 +238,6 @@
       doRemoveEvent() {
 
       },
-      onUploadMemberFile() {
-
-      },
       doPickMember(event, ePos, mPos, mid) {
         let _tmp = this.events[ePos];
         if (this.events[ePos].memberIds[mPos]) this.membersIndex[this.events[ePos].memberIds[mPos]].count--;
@@ -220,23 +245,33 @@
         this.membersIndex[mid].count++;
         this.events[ePos] = _tmp;
       },
+      pickMemberOptions(event) {
+        return _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+      },
+      /* Other UI Event*/
       doBack() {
         this.$router.go(-1);
       },
       doShift() {
 
       },
-      pickMemberOptions(event) {
-        return _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+      doExport() {
+
       },
     },
     computed: {
       canDoShift() {
         return this.members.length >= _.reduce(this.events, (e, sum) => sum + e.memberCount, 0);
       },
+      canDoExport() {
+        return false;
+      },
     },
     filters: {
-
+      computeEventMembersLen(memberIds) {
+        console.log
+        return _.filter(memberIds, mid => mid).length;
+      }
     }
   }
 </script>
