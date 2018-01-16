@@ -31,8 +31,8 @@
       <div class="row">
         <div class="col-3">
           <div class="m-b-px-10">
-            人員名單({{members.length}})：
-            <span>清除全部</span>
+            人員名單({{members.length}})
+            <!-- ：<span>清除全部</span> -->
           </div>
           <ul class="member-list">
             <li class="member-item row" v-for="(member, index) in members">
@@ -84,14 +84,15 @@
         </div>
         <div class="col-9">
           <div class="m-b-px-10">
-            活動列表({{events.length}})：
-            <span>清除全部</span>
+            活動列表({{events.length}})
+            <!-- ：<span>清除全部</span> -->
           </div>
           <table class="table table-bordered event-table" style="table-layout: fixed;">
             <thead class="thead-default">
               <tr>
                 <th class="ta-r" style="width: 40px">#</th>
                 <th>活動名稱</th>
+                <th></th>
                 <th class="ta-r" style="width: 120px">人數(選/全)</th>
                 <th v-for="n in eventTable.maxCount">人員{{n}}</th>
               </tr>
@@ -100,6 +101,11 @@
               <tr v-for="(event, eIndex) in events">
                 <td class="ta-r">{{eIndex + 1}}</td>
                 <td>{{event.name}}</td>
+                <td>
+                  <i class="fa fa-times icon-btn icon-rm" aria-hidden="true"
+                    @click="doRemoveEvent(event, eIndex)">
+                  </i>
+                </td>
                 <td class="ta-r">{{event.memberIds | computeEventMembersLen}}{{`/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
                   <div class="btn-group">
@@ -235,8 +241,13 @@
         this.eventForm = {};
         this.$refs.eventName.focus();
       },
-      doRemoveEvent() {
-
+      doRemoveEvent(event, ePos) {
+        _.forEach(event.memberIds, mid => {
+          if (mid) this.membersIndex[mid].count--;
+        });
+        this.events.splice(ePos, 1);
+        if (!this.events.length) this.eventTable.maxCount = 0;
+        else _.chain(this.events).map(e => e.memberCount).max().value();
       },
       doPickMember(event, ePos, mPos, mid) {
         let _tmp = this.events[ePos];
