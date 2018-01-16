@@ -15,8 +15,7 @@
         </div>
         <div class="col-6">
           <button class="btn btn-success m-r-px-10"
-            @click="doShift"
-            :disabled="canDoShift">
+            @click="doShift">
             隨機排班
           </button>
           <button class="btn btn-info"
@@ -162,7 +161,6 @@
                     type="number"
                     id="eventId"
                     min="0"
-                    :max="members.length"
                     v-model.number="eventForm.memberCount"
                     placeholder="需求人數">
                 </div>
@@ -247,7 +245,7 @@
         });
         this.events.splice(ePos, 1);
         if (!this.events.length) this.eventTable.maxCount = 0;
-        else _.chain(this.events).map(e => e.memberCount).max().value();
+        else this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
       },
       doPickMember(event, ePos, mPos, mid) {
         let _tmp = this.events[ePos];
@@ -264,7 +262,15 @@
         this.$router.go(-1);
       },
       doShift() {
-
+        for (let id in this.membersIndex) this.membersIndex[id].count = 0;
+        for (let i = 0; i < this.events.length; i++) {
+          this.events[i].memberIds = [];
+          let _members = _.chain(this.members).shuffle().orderBy(['count'], ['desc']).value();
+          for (let j = 0; j < this.events[i].memberCount && j < _members.length; j++) {
+            this.membersIndex[_members[j].id].count++;
+            this.events[i].memberIds.push(_members[j].id);
+          }
+        }
       },
       doExport() {
 
@@ -280,7 +286,6 @@
     },
     filters: {
       computeEventMembersLen(memberIds) {
-        console.log
         return _.filter(memberIds, mid => mid).length;
       }
     }
