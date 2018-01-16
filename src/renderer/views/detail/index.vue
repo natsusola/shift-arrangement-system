@@ -94,6 +94,7 @@
                 <th></th>
                 <th class="ta-r" style="width: 120px">人數(選/全)</th>
                 <th v-for="n in eventTable.maxCount">人員{{n}}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -127,7 +128,12 @@
                     </button>
                     <div class="dropdown-menu">
                       <!-- <input type="text" /> TODO: Search Function-->
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="#"
+                        @click="doCleanEventMember(event, mIndex)">
+                        清空
+                      </a>
+                      <a v-if="event.memberIds[mIndex]" class="dropdown-item icon-btn icon-rm" href="#"
+                        @click="doRemoveEventMember(event, mIndex)">
                         移除
                       </a>
                       <div class="dropdown-divider"></div>
@@ -138,6 +144,11 @@
                       </a>
                     </div>
                   </div>
+                </td>
+                <td>
+                  <i class="fa fa-plus icon-btn" aria-hidden="true"
+                    @click="doAddEventMemberCount(eIndex)">
+                  </i>
                 </td>
                 <td v-if="eventTable.maxCount > event.memberCount" :colspan="eventTable.maxCount - event.memberCount"></td>
               </tr>
@@ -246,6 +257,20 @@
         this.events.splice(ePos, 1);
         if (!this.events.length) this.eventTable.maxCount = 0;
         else this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
+      },
+      doAddEventMemberCount(ePos) {
+        this.events[ePos].memberCount++;
+        if (this.events[ePos].memberCount > this.eventTable.maxCount) this.eventTable.maxCount = this.events[ePos].memberCount;
+      },
+      doRemoveEventMember(event, mPos) {
+        this.membersIndex[event.memberIds[mPos]].count--;
+        event.memberIds.splice(mPos, 1);
+        event.memberCount--;
+        this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
+      },
+      doCleanEventMember(event, mPos) {
+        this.membersIndex[event.memberIds[mPos]].count--;
+        event.memberIds[mPos] = '';
       },
       doPickMember(event, ePos, mPos, mid) {
         let _tmp = this.events[ePos];

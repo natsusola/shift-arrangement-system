@@ -21,15 +21,20 @@
 
 .icon-btn {
   cursor: pointer;
+  opacity: .5;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .icon-rm {
-  color: #aaa;
-  &:hover {
-    color: red;
-  }
+  color: #e02828;
 }
 
 .btn {
   cursor: pointer;
+}
+
+.icon-rm:focus, .icon-rm:hover {
+  color: #e02828;
 }
