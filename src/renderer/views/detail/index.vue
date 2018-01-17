@@ -206,6 +206,22 @@
 
 <script>
   import XLSX from 'xlsx';
+  import moment from 'moment';
+  import { saveAs } from 'file-saver';
+
+  class Workbook {
+    constructor() {
+      this.SheetNames = [];
+      this.Sheets = {};
+    }
+  };
+
+  function s2ab(s) {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+  }
 
   export default {
     data() {
@@ -252,7 +268,8 @@
             if (mid === memberId) e.memberIds[mPos] = '';
           });
         });
-      },onUploadMemberExcelFile(e) {
+      },
+      onUploadMemberExcelFile(e) {
         if (e.target.files[0]) {
           let _reader = new FileReader();
           _reader.onload = (e) => {
@@ -346,7 +363,57 @@
         }
       },
       doExport() {
+        let _wb = new Workbook();
+        let _wopts = { bookType: 'xlsx', bookSST: false, type: 'binary' };
+        let _ws;
+        let _data = [];
+        let _colMap = [
+          { key: '_INDEX_', name: '#', cols: { wch: 5 } },
+          { key: 'name', name: '活動名稱', cols: { wch: 20 } },
+          { key: 'memberCount', name: '需求人數', cols: { wch: 10 } },
+          ..._.map(new Array(this.eventTable.maxCount), (m, i) => ({
+            key: '', name: `人員${i + 1}`, cols: { wch: 25 }
+          }))
+        ];
 
+        let _titles = _.map(_colMap, c => c.name);
+        let _keys = [...(_.map(_colMap, c => c.key)), '_MEMBER_'];
+
+        _data.push(_titles);
+        for (let i = 0; i < this.events.length; i++) {
+          let _ary = [];
+          for (let j = 0; j < _keys.length; j++) {
+            switch (_keys[j]){
+              case '': break;
+              case '_INDEX_':
+                _ary.push(i + 1);
+                break;
+              case '_MEMBER_':
+                for (let k = 0; k < this.events[i].memberIds.length; k++) {
+                  let _mid = this.events[i].memberIds[k];
+                  _ary.push(`${this.membersIndex[_mid].name} (${this.membersIndex[_mid].count})\r\n${this.membersIndex[_mid].id}`);
+                }
+                break;
+              default:
+                _ary.push(this.events[i][_keys[j]]);
+                break;
+            }
+          }
+          _data.push(_ary);
+        }
+        _ws = XLSX.utils.aoa_to_sheet(_data);
+        _ws['D2'].s = { wrapText: true };
+        _ws['E2'].s = {alignment:{ wrapText: true }};
+        console.log(_ws);
+        _ws['!cols'] = _.map(_colMap, c => c.cols);
+        _ws['!rows'] = _.map(new Array(this.events.length + 1), i => ({ hpx: 35 }));
+        _wb.SheetNames.push('Sheet1');
+        _wb.Sheets['Sheet1'] = _ws;
+        let _wbout = XLSX.write(_wb, _wopts);
+        saveAs(
+          new Blob([s2ab(_wbout)], { type:"application/octet-stream" }),
+          `${this.projectForm.name}_${moment().format('YYMMDDHHmmss')}.xlsx`
+        );
       },
     },
     computed: {
