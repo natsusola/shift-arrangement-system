@@ -79,7 +79,7 @@
               <label for="p-name" class="col-form-label">Excel 匯入：</label>
               <input type="file" class="form-control" style="flex:1"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                @change="onMemberExcelFile($event)"/>
+                @change="onUploadMemberExcelFile($event)"/>
             </div>
           </div>
         </div>
@@ -195,6 +195,8 @@
 </template>
 
 <script>
+  import XLSX from 'xlsx';
+
   export default {
     data() {
       return {
@@ -292,6 +294,7 @@
         for (let i = 0; i < this.events.length; i++) {
           this.events[i].memberIds = [];
           let _members = _.chain(this.members).shuffle().orderBy(['count'], ['desc']).value();
+          console.log(this.membersIndex);
           for (let j = 0; j < this.events[i].memberCount && j < _members.length; j++) {
             this.membersIndex[_members[j].id].count++;
             this.events[i].memberIds.push(_members[j].id);
@@ -301,8 +304,27 @@
       doExport() {
 
       },
-      onMemberExcelFile(e) {
-        console.log(e.target.files[0]);
+      onUploadMemberExcelFile(e) {
+        if (e.target.files[0]) {
+          let _reader = new FileReader();
+          _reader.onload = (e) => {
+            let _data = e.target.result;
+            let _wb = XLSX.read(_data, { type: 'binary' });
+            let _xlMembers = XLSX.utils.sheet_to_json(_wb.Sheets[_wb.SheetNames[0]]);
+            /* 驗證 id 沒有重複 */
+            let _validObj = {};
+            for (let i = 0; i < _xlMembers.length; i++) {
+              if (_validObj[_xlMembers[i].id] || this.membersIndex[_xlMembers[i].id]) return;
+              _validObj[_xlMembers[i].id] = {..._xlMembers[i], count: 0};
+            }
+            /* 為了順序和 Reference 再跑一次迴圈 */
+            for (let i = 0; i < _xlMembers.length; i++) {
+              this.membersIndex[_xlMembers[i].id] = _validObj[_xlMembers[i].id];
+              this.members.push(this.membersIndex[_xlMembers[i].id]);
+            }
+          };
+          _reader.readAsBinaryString(e.target.files[0]);
+        }
       }
     },
     computed: {
