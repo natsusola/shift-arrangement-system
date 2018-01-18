@@ -99,7 +99,13 @@
         </div>
         <div class="col-evnets">
           <div class="m-b-px-10">
-            活動列表({{events.length}})
+            <span>活動列表({{events.length}})</span>
+            <b-form-checkbox v-model="eventTable.showMemberId">
+              顯示人員ID
+            </b-form-checkbox>
+            <b-form-checkbox v-model="eventTable.showMemberCount">
+              顯示人員班數
+            </b-form-checkbox>
             <!-- ：<span>清除全部</span> -->
           </div>
           <table class="table table-bordered event-table">
@@ -133,9 +139,11 @@
                       <div v-else>
                         <div>
                           {{membersIndex[event.memberIds[mIndex]].name}}
-                          ({{membersIndex[event.memberIds[mIndex]].count}})
+                          <span v-if="eventTable.showMemberCount">
+                            ({{membersIndex[event.memberIds[mIndex]].count}})
+                          </span>
                         </div>
-                        <div>{{membersIndex[event.memberIds[mIndex]].id}}</div>
+                        <div v-if="eventTable.showMemberId">{{membersIndex[event.memberIds[mIndex]].id}}</div>
                       </div>
                     </button>
                     <button type="button"
@@ -158,8 +166,9 @@
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#"
                         v-for="(mo, moIndex) in pickMemberOptions(event)"
+                        :key="mo.id"
                         @click="doPickMember(event, eIndex, mIndex, mo.id)">
-                        {{`${mo.name}-${mo.id}(${mo.count})`}}
+                        {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
                       </a>
                     </div>
                   </div>
