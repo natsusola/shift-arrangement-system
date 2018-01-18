@@ -33,7 +33,32 @@
             人員名單({{members.length}})
             <!-- ：<span>清除全部</span> -->
           </div>
-          <ul class="member-list">
+          <table class="table table-bordered event-table">
+            <thead class="thead-default">
+              <tr>
+                <th>#</th>
+                <th>名稱</th>
+                <th>ID</th>
+                <th>次數</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(member, index) in members" :key="member.id">
+                <td>{{index + 1}}</td>
+                <td>{{member.name}}</td>
+                <td>{{member.id}}</td>
+                <td>{{member.count}}</td>
+                <td>
+                  <i class="fa fa-times icon-btn icon-rm"
+                    aria-hidden="true"
+                    @click="doRemoveMember(index, member.id)">
+                  </i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <ul class="member-list">
             <li class="member-item row" v-for="(member, index) in members">
               <div class="col-10 p-l-px-0">
                 <span class="member-index">{{index + 1}}.</span>
@@ -46,7 +71,7 @@
                 <i class="fa fa-times" aria-hidden="true"></i>
               </span>
             </li>
-          </ul>
+          </ul> -->
           <form name="membersForm" @submit.prevent="doAddMember">
             <div>
               <div class="form-group row">
@@ -88,9 +113,7 @@
             活動列表({{events.length}})
             <!-- ：<span>清除全部</span> -->
           </div>
-          <table class="table table-bordered event-table"
-            style="table-layout: fixed;"
-            :style="{width: calcTableWidth}">
+          <table class="table table-bordered event-table">
             <thead class="thead-default">
               <tr>
                 <th class="ta-r" style="width: 40px">#</th>
@@ -423,7 +446,7 @@
         return false;
       },
       calcTableWidth() {
-        return this.eventTable.maxCount > 3 ? this.eventTable.maxCount * 270 : 'initial';
+        // return this.eventTable.maxCount > 3 ? this.eventTable.maxCount * 270 : 'initial';
       }
     },
     filters: {

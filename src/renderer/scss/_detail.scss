@@ -3,7 +3,10 @@
   height: 100%;
   margin-bottom: 70px;
   .event-table {
-    width: initial;
+    // width: initial;
+  }
+  table td {
+    white-space: nowrap;
   }
 }
 
