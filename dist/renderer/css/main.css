@@ -637,6 +637,9 @@ ul {
 .m-r-px-100 {
   margin-right: 100px; }
 
+.ta-r {
+  text-align: right; }
+
 .__layout {
   padding: 20px; }
 
@@ -648,6 +651,54 @@ ul {
   margin-right: 0; }
 
 .form-control, .btn {
-  padding: 0.375rem 0.375rem; }
+  padding: 0.175rem 0.375rem; }
 
-/*# sourceMappingURL=main.css.map?1801141505*/
+.form-group.row {
+  align-items: center; }
+
+.icon-btn {
+  cursor: pointer;
+  opacity: .5; }
+  .icon-btn:hover {
+    opacity: 1; }
+
+.icon-rm {
+  color: #e02828; }
+
+.btn {
+  cursor: pointer; }
+
+.icon-rm:focus, .icon-rm:hover {
+  color: #e02828; }
+
+.table th, .table td {
+  vertical-align: middle;
+  text-align: center;
+  padding: 0.5rem; }
+
+.detail-wrap {
+  overflow: auto;
+  height: 100%;
+  margin-bottom: 70px; }
+  .detail-wrap table td {
+    white-space: nowrap; }
+  .detail-wrap .col-members, .detail-wrap col-events {
+    padding: 0 15px; }
+
+.member-item {
+  align-items: center;
+  margin-bottom: 10px; }
+
+.detail-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #aaa;
+  text-align: right; }
+
+.btn + .dropdown-toggle-split {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem; }

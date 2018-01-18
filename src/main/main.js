@@ -14,6 +14,10 @@ require('electron-debug')({ showDevTools: true })
 let mainWindow
 let win
 
+const winURL = process.env.NODE_ENV !== 'production'
+  ? 'http://localhost:8080'
+  : `file://${__dirname}/index.html`;
+
 function createWindow () {
   // Create the browser window.
   let mainWindowState = windowStateKeeper({
@@ -36,7 +40,7 @@ function createWindow () {
   //   protocol: 'file:',
   //   slashes: true
   // }))
-  mainWindow.loadURL('http://localhost:8080')
+  mainWindow.loadURL(winURL)
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 

@@ -4,7 +4,7 @@ const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const __DEBUG__ = process.env.__DEBUG__ !== 'false';
+const __DEBUG__ = process.env.NODE_ENV !== 'production';
 const hash = moment().format('YYMMDDHHmm');
 
 const extractCSS = new ExtractTextPlugin(`renderer/css/plugins.css?${hash}`);
@@ -14,7 +14,7 @@ let config = {
   entry: {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
     vendors: [
-      'vue', 'vue-router', 'bootstrap-vue', 'lodash'
+      'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment'
     ]
   },
   output: {
@@ -28,7 +28,7 @@ let config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        include: [ require.resolve("bootstrap-vue") ],
+        // include: [ require.resolve("bootstrap-vue") ],
         use: {
           loader: 'babel-loader',
           options: {
@@ -77,6 +77,10 @@ let config = {
     },
     extensions: ['.js', '.vue', '.json', '.scss']
   },
+  node: {
+    __dirname: process.env.NODE_ENV !== 'production',
+    __filename: process.env.NODE_ENV !== 'production'
+  },
   plugins: [
     new webpack.ProvidePlugin({
         $: 'jquery',
@@ -97,5 +101,14 @@ let config = {
     extractSCSS,
   ]
 };
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
+    new webpack.optimize.UglifyJsPlugin()
+  );
+}
 
 module.exports = config;
