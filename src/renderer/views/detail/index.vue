@@ -27,8 +27,8 @@
       </div>
     </form>
     <div class="">
-      <div class="row">
-        <div class="col-3">
+      <div class="row" style="flex-wrap: initial;">
+        <div class="col-members">
           <div class="m-b-px-10">
             人員名單({{members.length}})
             <!-- ：<span>清除全部</span> -->
@@ -39,14 +39,17 @@
                 <th>#</th>
                 <th>名稱</th>
                 <th>ID</th>
-                <th>次數</th>
+                <th>班數</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(member, index) in members" :key="member.id">
                 <td>{{index + 1}}</td>
-                <td>{{member.name}}</td>
+                <td>
+                  <span>{{member.name}}</span>
+                  <!-- <input class="form-control"  type="text" v-model.trim="member.name"/> -->
+                </td>
                 <td>{{member.id}}</td>
                 <td>{{member.count}}</td>
                 <td>
@@ -58,20 +61,6 @@
               </tr>
             </tbody>
           </table>
-          <!-- <ul class="member-list">
-            <li class="member-item row" v-for="(member, index) in members">
-              <div class="col-10 p-l-px-0">
-                <span class="member-index">{{index + 1}}.</span>
-                <span class="member-name">{{member.name}}</span>
-                -
-                <span class="member-id">{{member.id}}</span>
-                <span class="member-id">({{member.count}})</span>
-              </div>
-              <span class="icon-btn icon-rm" @click="doRemoveMember(index, member.id)">
-                <i class="fa fa-times" aria-hidden="true"></i>
-              </span>
-            </li>
-          </ul> -->
           <form name="membersForm" @submit.prevent="doAddMember">
             <div>
               <div class="form-group row">
@@ -108,7 +97,7 @@
             </div>
           </div>
         </div>
-        <div class="col-9">
+        <div class="col-evnets">
           <div class="m-b-px-10">
             活動列表({{events.length}})
             <!-- ：<span>清除全部</span> -->
@@ -127,7 +116,10 @@
             <tbody>
               <tr v-for="(event, eIndex) in events">
                 <td class="ta-r">{{eIndex + 1}}</td>
-                <td>{{event.name}}</td>
+                <td>
+                  <span>{{event.name}}</span>
+                  <!-- <input class="form-control" style="width: initial;" type="text" v-model.trim="event.name"/> -->
+                </td>
                 <td>
                   <i class="fa fa-times icon-btn icon-rm" aria-hidden="true"
                     @click="doRemoveEvent(event, eIndex)">
