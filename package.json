@@ -2,9 +2,10 @@
   "name": "electron-quick-start",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "./dist/main.js",
   "scripts": {
     "start": "electron .",
+    "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
     "dev": "node ./webpack/dev",
     "pro": "npm run pro:main && npm run pro:renderer",
     "pro:main": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.main.config.js",
@@ -18,6 +19,17 @@
     "tutorial",
     "demo"
   ],
+  "build": {
+    "productName": "shift-arrangment",
+    "appId": "natsu.shift-arrangment",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/*",
+      "dist/**/*"
+    ]
+  },
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
@@ -31,6 +43,7 @@
     "css-loader": "^0.28.8",
     "del": "^3.0.0",
     "electron": "~1.7.8",
+    "electron-builder": "^19.54.0",
     "electron-debug": "^1.5.0",
     "electron-window-state": "^4.1.1",
     "extract-text-webpack-plugin": "^3.0.2",

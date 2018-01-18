@@ -6,7 +6,7 @@ let config = {
     main: path.resolve(__dirname, '../src/main/main.js')
   },
   output: {
-    filename: 'main.min.js',
+    filename: 'main.js',
     path: path.join(__dirname, '../dist')
   },
   devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : '',
