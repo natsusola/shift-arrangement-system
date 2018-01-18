@@ -217,10 +217,10 @@
   };
 
   function s2ab(s) {
-    var buf = new ArrayBuffer(s.length);
-    var view = new Uint8Array(buf);
-    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-    return buf;
+    let _buf = new ArrayBuffer(s.length);
+    let _view = new Uint8Array(_buf);
+    for (let i = 0; i != s.length; ++i) _view[i] = s.charCodeAt(i) & 0xFF;
+    return _buf;
   }
 
   export default {
@@ -404,7 +404,6 @@
         _ws = XLSX.utils.aoa_to_sheet(_data);
         _ws['D2'].s = { wrapText: true };
         _ws['E2'].s = {alignment:{ wrapText: true }};
-        console.log(_ws);
         _ws['!cols'] = _.map(_colMap, c => c.cols);
         _ws['!rows'] = _.map(new Array(this.events.length + 1), i => ({ hpx: 35 }));
         _wb.SheetNames.push('Sheet1');
