@@ -2,8 +2,11 @@
   overflow: auto;
   height: 100%;
   margin-bottom: 70px;
-  .event-table {
-    width: initial;
+  table td {
+    white-space: nowrap;
+  }
+  .col-members, col-events {
+    padding: 0 15px
   }
 }
 

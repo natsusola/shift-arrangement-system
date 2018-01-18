@@ -27,26 +27,40 @@
       </div>
     </form>
     <div class="">
-      <div class="row">
-        <div class="col-3">
+      <div class="row" style="flex-wrap: initial;">
+        <div class="col-members">
           <div class="m-b-px-10">
             人員名單({{members.length}})
             <!-- ：<span>清除全部</span> -->
           </div>
-          <ul class="member-list">
-            <li class="member-item row" v-for="(member, index) in members">
-              <div class="col-10 p-l-px-0">
-                <span class="member-index">{{index + 1}}.</span>
-                <span class="member-name">{{member.name}}</span>
-                -
-                <span class="member-id">{{member.id}}</span>
-                <span class="member-id">({{member.count}})</span>
-              </div>
-              <span class="icon-btn icon-rm" @click="doRemoveMember(index, member.id)">
-                <i class="fa fa-times" aria-hidden="true"></i>
-              </span>
-            </li>
-          </ul>
+          <table class="table table-bordered event-table">
+            <thead class="thead-default">
+              <tr>
+                <th>#</th>
+                <th>名稱</th>
+                <th>ID</th>
+                <th>班數</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(member, index) in members" :key="member.id">
+                <td>{{index + 1}}</td>
+                <td>
+                  <span>{{member.name}}</span>
+                  <!-- <input class="form-control"  type="text" v-model.trim="member.name"/> -->
+                </td>
+                <td>{{member.id}}</td>
+                <td>{{member.count}}</td>
+                <td>
+                  <i class="fa fa-times icon-btn icon-rm"
+                    aria-hidden="true"
+                    @click="doRemoveMember(index, member.id)">
+                  </i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <form name="membersForm" @submit.prevent="doAddMember">
             <div>
               <div class="form-group row">
@@ -83,14 +97,18 @@
             </div>
           </div>
         </div>
-        <div class="col-9">
+        <div class="col-evnets">
           <div class="m-b-px-10">
-            活動列表({{events.length}})
+            <span>活動列表({{events.length}})</span>
+            <b-form-checkbox v-model="eventTable.showMemberId">
+              顯示人員ID
+            </b-form-checkbox>
+            <b-form-checkbox v-model="eventTable.showMemberCount">
+              顯示人員班數
+            </b-form-checkbox>
             <!-- ：<span>清除全部</span> -->
           </div>
-          <table class="table table-bordered event-table"
-            style="table-layout: fixed;"
-            :style="{width: calcTableWidth}">
+          <table class="table table-bordered event-table">
             <thead class="thead-default">
               <tr>
                 <th class="ta-r" style="width: 40px">#</th>
@@ -104,7 +122,10 @@
             <tbody>
               <tr v-for="(event, eIndex) in events">
                 <td class="ta-r">{{eIndex + 1}}</td>
-                <td>{{event.name}}</td>
+                <td>
+                  <span>{{event.name}}</span>
+                  <!-- <input class="form-control" style="width: initial;" type="text" v-model.trim="event.name"/> -->
+                </td>
                 <td>
                   <i class="fa fa-times icon-btn icon-rm" aria-hidden="true"
                     @click="doRemoveEvent(event, eIndex)">
@@ -118,9 +139,11 @@
                       <div v-else>
                         <div>
                           {{membersIndex[event.memberIds[mIndex]].name}}
-                          ({{membersIndex[event.memberIds[mIndex]].count}})
+                          <span v-if="eventTable.showMemberCount">
+                            ({{membersIndex[event.memberIds[mIndex]].count}})
+                          </span>
                         </div>
-                        <div>{{membersIndex[event.memberIds[mIndex]].id}}</div>
+                        <div v-if="eventTable.showMemberId">{{membersIndex[event.memberIds[mIndex]].id}}</div>
                       </div>
                     </button>
                     <button type="button"
@@ -143,8 +166,9 @@
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#"
                         v-for="(mo, moIndex) in pickMemberOptions(event)"
+                        :key="mo.id"
                         @click="doPickMember(event, eIndex, mIndex, mo.id)">
-                        {{`${mo.name}-${mo.id}(${mo.count})`}}
+                        {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
                       </a>
                     </div>
                   </div>
@@ -423,7 +447,7 @@
         return false;
       },
       calcTableWidth() {
-        return this.eventTable.maxCount > 3 ? this.eventTable.maxCount * 270 : 'initial';
+        // return this.eventTable.maxCount > 3 ? this.eventTable.maxCount * 270 : 'initial';
       }
     },
     filters: {
