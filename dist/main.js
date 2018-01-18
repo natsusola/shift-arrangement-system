@@ -339,25 +339,30 @@ webpackEmptyContext.id = 6;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const electron = __webpack_require__(1);
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
+"use strict";
 
-const path = __webpack_require__(2);
-const url = __webpack_require__(8);
-const windowStateKeeper = __webpack_require__(9);
+
+var electron = __webpack_require__(1);
+// Module to control application life.
+var app = electron.app;
+// Module to create native browser window.
+var BrowserWindow = electron.BrowserWindow;
+
+var path = __webpack_require__(2);
+var url = __webpack_require__(8);
+var windowStateKeeper = __webpack_require__(9);
 __webpack_require__(21)({ showDevTools: true });
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
-let win;
+var mainWindow = void 0;
+var win = void 0;
+
+var winURL =  false ? 'http://localhost:8080' : 'file://' + __dirname + '/index.html';
 
 function createWindow() {
   // Create the browser window.
-  let mainWindowState = windowStateKeeper({
+  var mainWindowState = windowStateKeeper({
     defaultWidth: 1600,
     defaultHeight: 900
   });
@@ -377,7 +382,7 @@ function createWindow() {
   //   protocol: 'file:',
   //   slashes: true
   // }))
-  mainWindow.loadURL('http://localhost:8080');
+  mainWindow.loadURL(winURL);
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
