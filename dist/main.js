@@ -340,7 +340,7 @@ webpackEmptyContext.id = 6;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(__dirname) {
 
 var electron = __webpack_require__(1);
 // Module to control application life.
@@ -358,7 +358,7 @@ __webpack_require__(21)({ showDevTools: true });
 var mainWindow = void 0;
 var win = void 0;
 
-var winURL =  false ? 'http://localhost:8080' : 'file://' + __dirname + '/index.html';
+var winURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'file://' + __dirname + '/index.html';
 
 function createWindow() {
   // Create the browser window.
@@ -420,6 +420,7 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+/* WEBPACK VAR INJECTION */}.call(exports, "src/main"))
 
 /***/ }),
 /* 8 */
@@ -3141,3 +3142,4 @@ module.exports = isEnvSet ? getFromEnv : (process.defaultApp || /node_modules[\\
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=main.js.map
