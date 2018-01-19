@@ -75,7 +75,7 @@ function startMain() {
 }
 
 function startElectron() {
-  electronProcess = spawn(electron, [path.resolve(__dirname, '../dist/main.min.js')]);
+  electronProcess = spawn(electron, [path.resolve(__dirname, '../dist/main.js')]);
   electronProcess.on('close', () => {
     if (!manualRestart) process.exit()
   })

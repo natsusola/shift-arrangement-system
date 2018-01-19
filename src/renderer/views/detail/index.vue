@@ -48,7 +48,6 @@
                 <td>{{index + 1}}</td>
                 <td>
                   <span>{{member.name}}</span>
-                  <!-- <input class="form-control"  type="text" v-model.trim="member.name"/> -->
                 </td>
                 <td>{{member.id}}</td>
                 <td>{{member.count}}</td>
