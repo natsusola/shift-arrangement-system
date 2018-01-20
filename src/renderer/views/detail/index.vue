@@ -89,7 +89,30 @@
           </form>
           <div>
             <div class="form-group row">
-              <label for="p-name" class="col-form-label">Excel 匯入：</label>
+              <label for="p-name" class="col-form-label">
+                Excel 匯入
+                <b-dropdown class="reminder-dropdown" variant="link" size="lg" no-caret>
+                  <template slot="button-content">
+                    <i class="fa fa-question-circle-o icon-btn" aria-hidden="true"></i>
+                  </template>
+                  Excel 格式：
+                  <table class="table table-bordered m-b-px-0">
+                    <thead>
+                      <tr>
+                        <th>name</th>
+                        <th>id</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="i in 2">
+                        <td>人員{{i}}</td>
+                        <td>09{{`${(i+'').repeat(8)}`}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </b-dropdown>
+                ：
+              </label>
               <input type="file" class="form-control" style="flex:1"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 @change="onUploadMemberExcelFile($event)"/>
@@ -193,7 +216,7 @@
                     v-model.trim="eventForm.name"
                     placeholder="活動名稱(時間)">
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                   <input
                     class="form-control"
                     type="number"
@@ -211,8 +234,31 @@
           </form>
           <div>
             <div class="form-group row">
-              <label for="p-name" class="col-form-label">Excel 匯入：</label>
-              <input type="file" class="form-control col-2"
+              <label for="p-name" class="col-form-label">
+                Excel 匯入
+                <b-dropdown class="reminder-dropdown" variant="link" size="lg" no-caret>
+                  <template slot="button-content">
+                    <i class="fa fa-question-circle-o icon-btn" aria-hidden="true"></i>
+                  </template>
+                  Excel 格式：
+                  <table class="table table-bordered m-b-px-0">
+                    <thead>
+                      <tr>
+                        <th>name</th>
+                        <th>memberCount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="i in 2">
+                        <td>活動{{i}}</td>
+                        <td>{{i}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </b-dropdown>
+                ：
+              </label>
+              <input type="file" class="form-control col-4"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 @change="onUploadEventExcelFile($event)"/>
             </div>
@@ -425,8 +471,6 @@
           _data.push(_ary);
         }
         _ws = XLSX.utils.aoa_to_sheet(_data);
-        _ws['D2'].s = { wrapText: true };
-        _ws['E2'].s = {alignment:{ wrapText: true }};
         _ws['!cols'] = _.map(_colMap, c => c.cols);
         _ws['!rows'] = _.map(new Array(this.events.length + 1), i => ({ hpx: 35 }));
         _wb.SheetNames.push('Sheet1');
