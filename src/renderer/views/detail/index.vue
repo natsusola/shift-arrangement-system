@@ -154,7 +154,8 @@
                 </td>
                 <td class="ta-r">{{event.memberIds | computeEventMembersLen}}{{`/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
-                  <b-dropdown split class="btn-group" variant="secondary">
+                  <b-dropdown split class="btn-group member-dropmenu-group" variant="secondary"
+                    @hidden="event.searchKw = ''">
                     <template slot="button-content">
                       <div v-if="!event.memberIds[mIndex]">-----</div>
                       <div v-else>
@@ -167,10 +168,19 @@
                         <div v-if="eventTable.showMemberId">{{membersIndex[event.memberIds[mIndex]].id}}</div>
                       </div>
                     </template>
-                    <b-dropdown-item href="#" @click="doCleanEventMember(event, mIndex)">清空</b-dropdown-item>
-                    <b-dropdown-item href="#" class="icon-btn icon-rm" @click="doRemoveEventMember(event, mIndex)">
+                    <div class="search-group">
+                      <input class="form-control" v-model.trim="event.searchKw" placeholder="名稱orID"/>
+                    </div>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item href="#"
+                      v-if="!event.searchKw"
+                      @click="doCleanEventMember(event, mIndex)">清空</b-dropdown-item>
+                    <b-dropdown-item href="#"
+                      v-if="!event.searchKw"
+                      class="icon-btn icon-rm" @click="doRemoveEventMember(event, mIndex)">
                       移除
                     </b-dropdown-item>
+                    <b-dropdown-divider v-if="!event.searchKw"></b-dropdown-divider>
                     <b-dropdown-item href="#"
                       v-for="(mo, moIndex) in pickMemberOptions(event)"
                       :key="mo.id"
@@ -364,12 +374,13 @@
         if (this.events[ePos].memberCount > this.eventTable.maxCount) this.eventTable.maxCount = this.events[ePos].memberCount;
       },
       doRemoveEventMember(event, mPos) {
-        this.membersIndex[event.memberIds[mPos]].count--;
+        if (event.memberIds[mPos])  this.membersIndex[event.memberIds[mPos]].count--;
         event.memberIds.splice(mPos, 1);
         event.memberCount--;
         this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
       },
       doCleanEventMember(event, mPos) {
+        if (!event.memberIds[mPos]) return;
         this.membersIndex[event.memberIds[mPos]].count--;
         event.memberIds[mPos] = '';
       },
@@ -381,7 +392,11 @@
         this.events[ePos] = _tmp;
       },
       pickMemberOptions(event) {
-        return _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+        let _ary = _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+        if (event.searchKw) {
+          _ary = _.filter(_ary, m => m.name.indexOf(event.searchKw) > -1 || m.id.indexOf(event.searchKw) > -1);
+        }
+        return _ary;
       },
       onUploadEventExcelFile(e) {
         if (e.target.files[0]) {
