@@ -1,2 +1,2 @@
-export { default as MemberRow } from './MemberRow.vue';
-export { default as EventRow } from './EventRow.vue';
+export { default as MemberCol } from './MemberCol.vue';
+export { default as EventCol } from './EventCol.vue';
