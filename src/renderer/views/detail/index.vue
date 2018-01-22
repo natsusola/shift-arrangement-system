@@ -60,36 +60,58 @@
               </tr>
             </tbody>
           </table>
-          <form name="membersForm" @submit.prevent="doAddMember">
-            <div>
-              <div class="form-group row">
-                <div class="col-4 p-px-0">
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="memberName"
-                    v-model.trim="memberForm.name"
-                    ref="memberName"
-                    placeholder="姓名">
-                </div>
-                <div class="col-6">
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="memberId"
-                    v-model.trim="memberForm.id"
-                    placeholder="ID(手機或email)">
-                </div>
-                <button class="btn btn-success"
-                  :disabled="!this.memberForm.name || !this.memberForm.id">
-                  新增
-                </button>
+          <form class="member-form m-b-px-5" name="membersForm" @submit.prevent="doAddMember">
+            <div class="form-group row m-b-px-5">
+              <div class="col-4 p-px-0">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="memberName"
+                  v-model.trim="memberForm.name"
+                  ref="memberName"
+                  placeholder="姓名">
               </div>
+              <div class="col-6">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="memberId"
+                  v-model.trim="memberForm.id"
+                  placeholder="ID(手機或email)">
+              </div>
+              <button class="btn btn-success"
+                :disabled="!this.memberForm.name || !this.memberForm.id">
+                新增
+              </button>
+              <div class="form-reminder">* ID 不可重複</div>
             </div>
           </form>
           <div>
             <div class="form-group row">
-              <label for="p-name" class="col-form-label">Excel 匯入：</label>
+              <label for="p-name" class="col-form-label">
+                Excel 匯入
+                <b-dropdown class="reminder-dropdown" variant="link" size="lg" no-caret>
+                  <template slot="button-content">
+                    <i class="fa fa-question-circle-o icon-btn" aria-hidden="true"></i>
+                  </template>
+                  Excel 格式：
+                  <table class="table table-bordered m-b-px-0">
+                    <thead>
+                      <tr>
+                        <th>name</th>
+                        <th>id</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="i in 2">
+                        <td>人員{{i}}</td>
+                        <td>09{{`${(i+'').repeat(8)}`}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </b-dropdown>
+                ：
+              </label>
               <input type="file" class="form-control" style="flex:1"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 @change="onUploadMemberExcelFile($event)"/>
@@ -99,10 +121,10 @@
         <div class="col-evnets">
           <div class="m-b-px-10">
             <span>活動列表({{events.length}})</span>
-            <b-form-checkbox v-model="eventTable.showMemberId">
+            <b-form-checkbox class="m-b-px-0" v-model="eventTable.showMemberId">
               顯示人員ID
             </b-form-checkbox>
-            <b-form-checkbox v-model="eventTable.showMemberCount">
+            <b-form-checkbox class="m-b-px-0" v-model="eventTable.showMemberCount">
               顯示人員班數
             </b-form-checkbox>
             <!-- ：<span>清除全部</span> -->
@@ -132,8 +154,9 @@
                 </td>
                 <td class="ta-r">{{event.memberIds | computeEventMembersLen}}{{`/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-secondary">
+                  <b-dropdown split class="btn-group member-dropmenu-group" variant="secondary"
+                    @hidden="event.searchKw = ''">
+                    <template slot="button-content">
                       <div v-if="!event.memberIds[mIndex]">-----</div>
                       <div v-else>
                         <div>
@@ -144,33 +167,27 @@
                         </div>
                         <div v-if="eventTable.showMemberId">{{membersIndex[event.memberIds[mIndex]].id}}</div>
                       </div>
-                    </button>
-                    <button type="button"
-                      class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false">
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                      <!-- <input type="text" /> TODO: Search Function-->
-                      <a class="dropdown-item" href="#"
-                        @click="doCleanEventMember(event, mIndex)">
-                        清空
-                      </a>
-                      <a v-if="event.memberIds[mIndex]" class="dropdown-item icon-btn icon-rm" href="#"
-                        @click="doRemoveEventMember(event, mIndex)">
-                        移除
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#"
-                        v-for="(mo, moIndex) in pickMemberOptions(event)"
-                        :key="mo.id"
-                        @click="doPickMember(event, eIndex, mIndex, mo.id)">
-                        {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
-                      </a>
+                    </template>
+                    <div class="search-group">
+                      <input class="form-control" v-model.trim="event.searchKw" placeholder="名稱orID"/>
                     </div>
-                  </div>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item href="#"
+                      v-if="!event.searchKw"
+                      @click="doCleanEventMember(event, mIndex)">清空</b-dropdown-item>
+                    <b-dropdown-item href="#"
+                      v-if="!event.searchKw"
+                      class="icon-btn icon-rm" @click="doRemoveEventMember(event, mIndex)">
+                      移除
+                    </b-dropdown-item>
+                    <b-dropdown-divider v-if="!event.searchKw"></b-dropdown-divider>
+                    <b-dropdown-item href="#"
+                      v-for="(mo, moIndex) in pickMemberOptions(event)"
+                      :key="mo.id"
+                      @click="doPickMember(event, eIndex, mIndex, mo.id)">
+                      {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
+                    </b-dropdown-item>
+                  </b-dropdown>
                 </td>
                 <td>
                   <i class="fa fa-plus icon-btn" aria-hidden="true"
@@ -193,7 +210,7 @@
                     v-model.trim="eventForm.name"
                     placeholder="活動名稱(時間)">
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                   <input
                     class="form-control"
                     type="number"
@@ -211,8 +228,31 @@
           </form>
           <div>
             <div class="form-group row">
-              <label for="p-name" class="col-form-label">Excel 匯入：</label>
-              <input type="file" class="form-control col-2"
+              <label for="p-name" class="col-form-label">
+                Excel 匯入
+                <b-dropdown class="reminder-dropdown" variant="link" size="lg" no-caret>
+                  <template slot="button-content">
+                    <i class="fa fa-question-circle-o icon-btn" aria-hidden="true"></i>
+                  </template>
+                  Excel 格式：
+                  <table class="table table-bordered m-b-px-0">
+                    <thead>
+                      <tr>
+                        <th>name</th>
+                        <th>memberCount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="i in 2">
+                        <td>活動{{i}}</td>
+                        <td>{{i}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </b-dropdown>
+                ：
+              </label>
+              <input type="file" class="form-control col-4"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 @change="onUploadEventExcelFile($event)"/>
             </div>
@@ -334,12 +374,13 @@
         if (this.events[ePos].memberCount > this.eventTable.maxCount) this.eventTable.maxCount = this.events[ePos].memberCount;
       },
       doRemoveEventMember(event, mPos) {
-        this.membersIndex[event.memberIds[mPos]].count--;
+        if (event.memberIds[mPos])  this.membersIndex[event.memberIds[mPos]].count--;
         event.memberIds.splice(mPos, 1);
         event.memberCount--;
         this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
       },
       doCleanEventMember(event, mPos) {
+        if (!event.memberIds[mPos]) return;
         this.membersIndex[event.memberIds[mPos]].count--;
         event.memberIds[mPos] = '';
       },
@@ -351,7 +392,11 @@
         this.events[ePos] = _tmp;
       },
       pickMemberOptions(event) {
-        return _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+        let _ary = _.filter(this.members, m => !_.includes(event.memberIds, m.id));
+        if (event.searchKw) {
+          _ary = _.filter(_ary, m => m.name.indexOf(event.searchKw) > -1 || m.id.indexOf(event.searchKw) > -1);
+        }
+        return _ary;
       },
       onUploadEventExcelFile(e) {
         if (e.target.files[0]) {
@@ -425,8 +470,6 @@
           _data.push(_ary);
         }
         _ws = XLSX.utils.aoa_to_sheet(_data);
-        _ws['D2'].s = { wrapText: true };
-        _ws['E2'].s = {alignment:{ wrapText: true }};
         _ws['!cols'] = _.map(_colMap, c => c.cols);
         _ws['!rows'] = _.map(new Array(this.events.length + 1), i => ({ hpx: 35 }));
         _wb.SheetNames.push('Sheet1');
