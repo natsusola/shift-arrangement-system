@@ -60,31 +60,30 @@
               </tr>
             </tbody>
           </table>
-          <form name="membersForm" @submit.prevent="doAddMember">
-            <div>
-              <div class="form-group row">
-                <div class="col-4 p-px-0">
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="memberName"
-                    v-model.trim="memberForm.name"
-                    ref="memberName"
-                    placeholder="姓名">
-                </div>
-                <div class="col-6">
-                  <input
-                    class="form-control"
-                    type="text"
-                    id="memberId"
-                    v-model.trim="memberForm.id"
-                    placeholder="ID(手機或email)">
-                </div>
-                <button class="btn btn-success"
-                  :disabled="!this.memberForm.name || !this.memberForm.id">
-                  新增
-                </button>
+          <form class="member-form m-b-px-5" name="membersForm" @submit.prevent="doAddMember">
+            <div class="form-group row m-b-px-5">
+              <div class="col-4 p-px-0">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="memberName"
+                  v-model.trim="memberForm.name"
+                  ref="memberName"
+                  placeholder="姓名">
               </div>
+              <div class="col-6">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="memberId"
+                  v-model.trim="memberForm.id"
+                  placeholder="ID(手機或email)">
+              </div>
+              <button class="btn btn-success"
+                :disabled="!this.memberForm.name || !this.memberForm.id">
+                新增
+              </button>
+              <div class="form-reminder">* ID 不可重複</div>
             </div>
           </form>
           <div>
@@ -122,10 +121,10 @@
         <div class="col-evnets">
           <div class="m-b-px-10">
             <span>活動列表({{events.length}})</span>
-            <b-form-checkbox v-model="eventTable.showMemberId">
+            <b-form-checkbox class="m-b-px-0" v-model="eventTable.showMemberId">
               顯示人員ID
             </b-form-checkbox>
-            <b-form-checkbox v-model="eventTable.showMemberCount">
+            <b-form-checkbox class="m-b-px-0" v-model="eventTable.showMemberCount">
               顯示人員班數
             </b-form-checkbox>
             <!-- ：<span>清除全部</span> -->
