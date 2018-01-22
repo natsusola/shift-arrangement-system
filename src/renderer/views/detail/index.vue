@@ -60,8 +60,8 @@
               </tr>
             </tbody>
           </table>
-          <form class="member-form m-b-px-5" name="membersForm" @submit.prevent="doAddMember">
-            <div class="form-group row m-b-px-5">
+          <form class="member-form m-b-px-0" name="membersForm" @submit.prevent="doAddMember">
+            <div class="form-group row m-b-px-0">
               <div class="col-4 p-px-0">
                 <input
                   class="form-control"
@@ -114,6 +114,7 @@
               </label>
               <input type="file" class="form-control" style="flex:1"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ref="memberFileInput"
                 @change="onUploadMemberExcelFile($event)"/>
             </div>
           </div>
@@ -254,6 +255,7 @@
               </label>
               <input type="file" class="form-control col-4"
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ref="eventFileInput"
                 @change="onUploadEventExcelFile($event)"/>
             </div>
           </div>
@@ -337,8 +339,15 @@
           let _reader = new FileReader();
           _reader.onload = (e) => {
             let _data = e.target.result;
+            this.$refs.memberFileInput.value = '';
             let _wb = XLSX.read(_data, { type: 'binary' });
+            /* 檢查格式 */
+            let _requiredKeys = { A1: 'name', B1: 'id' };
+            for (let key in _requiredKeys) {
+              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) return;
+            }
             let _xlMembers = XLSX.utils.sheet_to_json(_wb.Sheets[_wb.SheetNames[0]]);
+
             /* 驗證 id 沒有重複 */
             let _validObj = {};
             for (let i = 0; i < _xlMembers.length; i++) {
@@ -402,10 +411,15 @@
         if (e.target.files[0]) {
           let _reader = new FileReader();
           _reader.onload = (e) => {
+            this.$refs.eventFileInput.value = '';
             let _data = e.target.result;
+            /* 檢查格式 */
             let _wb = XLSX.read(_data, { type: 'binary' });
+            let _requiredKeys = { A1: 'name', B1: 'memberCount' };
+            for (let key in _requiredKeys) {
+              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) return;
+            }
             let _xlEvents = XLSX.utils.sheet_to_json(_wb.Sheets[_wb.SheetNames[0]]);
-            /* 驗證 id 沒有重複 */
             for (let i = 0; i < _xlEvents.length; i++) {
               _xlEvents[i].memberCount = parseInt(_xlEvents[i].memberCount);
               this.events.push({..._xlEvents[i], memberIds: []});
@@ -429,6 +443,9 @@
             this.events[i].memberIds.push(_members[j].id);
           }
         }
+      },
+      onClearFileInput(elem) {
+        elem.value = '';
       },
       doExport() {
         let _wb = new Workbook();
