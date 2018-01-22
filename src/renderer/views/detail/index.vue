@@ -154,8 +154,8 @@
                 </td>
                 <td class="ta-r">{{event.memberIds | computeEventMembersLen}}{{`/${event.memberCount}`}}</td>
                 <td v-for="(m, mIndex) in event.memberCount">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-secondary">
+                  <b-dropdown split class="btn-group" variant="secondary">
+                    <template slot="button-content">
                       <div v-if="!event.memberIds[mIndex]">-----</div>
                       <div v-else>
                         <div>
@@ -166,33 +166,18 @@
                         </div>
                         <div v-if="eventTable.showMemberId">{{membersIndex[event.memberIds[mIndex]].id}}</div>
                       </div>
-                    </button>
-                    <button type="button"
-                      class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false">
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                      <!-- <input type="text" /> TODO: Search Function-->
-                      <a class="dropdown-item" href="#"
-                        @click="doCleanEventMember(event, mIndex)">
-                        清空
-                      </a>
-                      <a v-if="event.memberIds[mIndex]" class="dropdown-item icon-btn icon-rm" href="#"
-                        @click="doRemoveEventMember(event, mIndex)">
-                        移除
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#"
-                        v-for="(mo, moIndex) in pickMemberOptions(event)"
-                        :key="mo.id"
-                        @click="doPickMember(event, eIndex, mIndex, mo.id)">
-                        {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
-                      </a>
-                    </div>
-                  </div>
+                    </template>
+                    <b-dropdown-item href="#" @click="doCleanEventMember(event, mIndex)">清空</b-dropdown-item>
+                    <b-dropdown-item href="#" class="icon-btn icon-rm" @click="doRemoveEventMember(event, mIndex)">
+                      移除
+                    </b-dropdown-item>
+                    <b-dropdown-item href="#"
+                      v-for="(mo, moIndex) in pickMemberOptions(event)"
+                      :key="mo.id"
+                      @click="doPickMember(event, eIndex, mIndex, mo.id)">
+                      {{`${moIndex + 1}: ${mo.name} (${mo.count})`}}
+                    </b-dropdown-item>
+                  </b-dropdown>
                 </td>
                 <td>
                   <i class="fa fa-plus icon-btn" aria-hidden="true"
