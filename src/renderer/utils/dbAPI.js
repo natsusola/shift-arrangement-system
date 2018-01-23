@@ -23,7 +23,6 @@ dbAPI.project.list = function projectList(params) {
 };
 
 dbAPI.project.get = function projectGet(params) {
-
   return MyDB.get(params._id)
     .then(res => ({
       ...defaultObj,
@@ -32,7 +31,7 @@ dbAPI.project.get = function projectGet(params) {
 };
 
 dbAPI.project.add = function projectAdd(params) {
-  params.created_at = JSON.stringify(new Date());
+  params.created_at = (new Date()).toISOString();
   return MyDB.post(params)
     .then(res => ({
       ...defaultObj
@@ -40,7 +39,7 @@ dbAPI.project.add = function projectAdd(params) {
 };
 
 dbAPI.project.update = function projectAdd(params) {
-  params.updated_at = JSON.stringify(new Date());
+  params.updated_at = (new Date()).toISOString();
   return MyDB.put(params)
     .then(res => ({
       ...defaultObj

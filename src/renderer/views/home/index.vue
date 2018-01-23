@@ -1,10 +1,10 @@
 <template>
   <div class="home-wrap">
     <h3>列表</h3>
-    <!-- <router-link :to="{ name: 'detail', params: {id: 1} }">
-      goto
-    </router-link> -->
-    <button class="btn btn-primary" @click="doAddProject">新增專案</button>
+    <button class="btn btn-primary m-b-px-10"
+      @click="doAddProject">
+      新增專案
+    </button>
     <table class="table table-bordered">
       <thead class="thead-default">
         <tr>
@@ -30,8 +30,8 @@
           <td>
             {{project.events.length}}
           </td>
-          <td>{{project.created_at}}</td>
-          <td>{{project.updated_at}}</td>
+          <td>{{project.created_at | dateFormat}}</td>
+          <td>{{project.updated_at | dateFormat}}</td>
           <td>
             <router-link :to="{
                 name: 'detail',
@@ -53,6 +53,7 @@
 
 <script>
   import { dbRequest, dbAPI } from '@/utils';
+  import moment from 'moment';
 
   function apiListProject(params) {
     return dbRequest(dbAPI.project.list)
@@ -86,6 +87,11 @@
       },
       doAddProject() {
         this.$router.push({name: 'detail', query: {_id: '', _rev: ''}});
+      }
+    },
+    filters: {
+      dateFormat: (date) => {
+        return moment(date).format('YYYY/MM/DD HH:mm:ss');
       }
     }
   };

@@ -111,6 +111,7 @@
       },
       doSave() {
         let _data = {
+          ...this.project,
           name: this.projectForm.name,
           desc: this.projectForm.desc,
           members: this.members,
@@ -118,8 +119,6 @@
         };
 
         if (this.project._id) {
-          _data._id = this.project._id;
-          _data._rev = this.project._rev;
           dbRequest(dbAPI.project.update, _data)
             .then(() => { this.$router.push('/'); });
         } else {
