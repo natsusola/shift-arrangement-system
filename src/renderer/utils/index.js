@@ -1,2 +1,2 @@
-export { default as apiRequest } from './apiRequest';
+export { default as dbRequest } from './dbRequest';
 export { default as dbAPI } from './dbAPI';
