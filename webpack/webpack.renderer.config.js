@@ -14,7 +14,8 @@ let config = {
   entry: {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
     vendors: [
-      'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment'
+      'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment',
+      'pouchdb-browser',
     ]
   },
   output: {

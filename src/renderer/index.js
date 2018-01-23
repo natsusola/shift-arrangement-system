@@ -2,8 +2,6 @@ import Vue from 'vue';
 import App from './App.vue';
 import BootstrapVue from 'bootstrap-vue';
 import router from './router';
-import _ from 'lodash';
-import moment from 'moment';
 import 'bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -17,7 +15,5 @@ Vue.use(BootstrapVue);
 new Vue({
   components: { App },
   router,
-  _,
-  moment,
   template: '<App/>'
 }).$mount('#app');
