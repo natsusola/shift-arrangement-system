@@ -230,6 +230,15 @@
       computeEventMembersLen(memberIds) {
         return _.filter(memberIds, mid => mid).length;
       }
+    },
+    watch: {
+      events: {
+        handler(nv, ov) {
+          if (nv.length !== ov.length) {
+            this.eventTable.maxCount = _.chain(this.events).map(e => e.memberCount).max().value();
+          }
+        }
+      }
     }
   }
 </script>

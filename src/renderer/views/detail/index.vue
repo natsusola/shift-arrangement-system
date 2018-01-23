@@ -52,8 +52,9 @@
   import XLSX from 'xlsx';
   import moment from 'moment';
   import { saveAs } from 'file-saver';
-  import MyDB from '@/db';
   import { MemberCol, EventCol } from './components';
+
+  import { dbRequest, dbAPI } from '@/utils';
 
   class Workbook {
     constructor() {
@@ -69,13 +70,14 @@
     return _buf;
   }
 
+  function apiAddProject(params) {
+    return dbRequest(dbAPI.project.add);
+  }
+
   export default {
-    components: {
-      'member-col': MemberCol,
-      'event-col': EventCol
-    },
     data() {
       return {
+        project: {},
         projectForm: {
           name: '',
           desc: '',
@@ -84,6 +86,24 @@
         membersIndex: {},
         events: [],
       };
+    },
+    mounted() {
+      if (this.$route.query._id) {
+        dbRequest(dbAPI.project.get, {_id: this.$route.query._id})
+          .then(res => {
+            this.project = res.project;
+            this.events = res.project.events;
+            this.projectForm = {
+              name: res.project.name,
+              desc: res.project.desc,
+            };
+            let _members = res.project.members;
+            for (let i = 0; i < _members.length; i++) {
+              this.membersIndex[_members[i].id] = {..._members[i]};
+              this.members.push(this.membersIndex[_members[i].id]);
+            }
+          });
+      }
     },
     methods: {
       doBack() {
@@ -94,16 +114,18 @@
           name: this.projectForm.name,
           desc: this.projectForm.desc,
           members: this.members,
+          events: this.events,
         };
 
-        MyDB.post(_data)
-          .then(res => {
-            this.$router.push('/');
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(res);
-          });
+        if (this.project._id) {
+          _data._id = this.project._id;
+          _data._rev = this.project._rev;
+          dbRequest(dbAPI.project.update, _data)
+            .then(() => { this.$router.push('/'); });
+        } else {
+          dbRequest(dbAPI.project.add, _data)
+            .then(() => { this.$router.push('/'); });
+        }
       },
       doShift() {
         for (let id in this.membersIndex) this.membersIndex[id].count = 0;
@@ -174,6 +196,10 @@
       canDoExport() {
         return false;
       },
+    },
+    components: {
+      'member-col': MemberCol,
+      'event-col': EventCol
     },
   }
 </script>

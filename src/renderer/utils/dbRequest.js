@@ -9,7 +9,7 @@ const dbRequest = (fn, params) => {
       return res;
     })
     .catch(err => {
-      console.log(`%c RES `, 'background: red; color: white', fn.name, res);
+      console.log(`%c RES `, 'background: red; color: white', fn.name, err);
       throw err;
     });
 };

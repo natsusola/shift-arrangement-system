@@ -1,9 +1,10 @@
 <template>
   <div class="home-wrap">
     <h3>列表</h3>
-    <router-link :to="{ name: 'detail', params: {id: 1} }">
+    <!-- <router-link :to="{ name: 'detail', params: {id: 1} }">
       goto
-    </router-link>
+    </router-link> -->
+    <button class="btn btn-primary" @click="doAddProject">新增專案</button>
     <table class="table table-bordered">
       <thead class="thead-default">
         <tr>
@@ -24,16 +25,20 @@
           <td>{{project.name}}</td>
           <td>{{project.desc}}</td>
           <td>
-            <!-- {{project.members.length}} -->
+            {{project.members.length}}
           </td>
           <td>
-            <!-- {{project.events.length}} -->
+            {{project.events.length}}
           </td>
           <td>{{project.created_at}}</td>
           <td>{{project.updated_at}}</td>
           <td>
-            <i class="fa fa-pencil-square-o" aria-hidden="true">
-            </i>
+            <router-link :to="{
+                name: 'detail',
+                query: { _id: project._id, _rev: project._rev }
+              }">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </router-link>
           </td>
           <td>
             <i class="fa fa-times icon-btn icon-rm" aria-hidden="true"
@@ -48,7 +53,6 @@
 
 <script>
   import { dbRequest, dbAPI } from '@/utils';
-  import MyDB from '@/db';
 
   function apiListProject(params) {
     return dbRequest(dbAPI.project.list)
@@ -80,7 +84,9 @@
             apiListProject.call(this, this.params);
           });
       },
-      doClick(e, params) { console.log(e, params); }
+      doAddProject() {
+        this.$router.push({name: 'detail', query: {_id: '', _rev: ''}});
+      }
     }
   };
 </script>
