@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="detail-footer">
-      <button class="btn btn-primary m-r-px-20">存檔</button>
+      <button class="btn btn-primary m-r-px-20" @click="doSave">存檔</button>
       <button class="btn btn-secondary" @click="doBack">返回</button>
     </div>
   </div>
@@ -52,6 +52,7 @@
   import XLSX from 'xlsx';
   import moment from 'moment';
   import { saveAs } from 'file-saver';
+  import MyDB from '@/db';
   import { MemberCol, EventCol } from './components';
 
   class Workbook {
@@ -86,7 +87,23 @@
     },
     methods: {
       doBack() {
-        this.$router.go(-1);
+        this.$router.push('/');
+      },
+      doSave() {
+        let _data = {
+          name: this.projectForm.name,
+          desc: this.projectForm.desc,
+          members: this.members,
+        };
+
+        MyDB.post(_data)
+          .then(res => {
+            this.$router.push('/');
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(res);
+          });
       },
       doShift() {
         for (let id in this.membersIndex) this.membersIndex[id].count = 0;

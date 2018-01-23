@@ -9,16 +9,21 @@
 </template>
 
 <script>
+  import { apiRequest, dbAPI } from '@/utils';
+  import MyDB from '@/db';
+
   export default {
     name: 'home',
     data() {
       return {
-        name: 'Jack',
-        items: [
-          {name: 'a'},
-          {name: 'b'},
-        ]
+        items: []
       }
+    },
+    mounted() {
+      apiRequest(dbAPI.project.list)
+        .then(res => {
+          console.log(res);
+        });
     },
     methods: {
       doClick(e, params) { console.log(e, params); }
