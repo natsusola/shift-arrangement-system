@@ -15,7 +15,7 @@ let config = {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
     vendors: [
       'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment',
-      'pouchdb-browser',
+      'pouchdb-browser', 'pouchdb-find', 'file-saver', 'xlsx'
     ]
   },
   output: {
@@ -79,8 +79,8 @@ let config = {
     extensions: ['.js', '.vue', '.json', '.scss']
   },
   node: {
-    __dirname: process.env.NODE_ENV !== 'production',
-    __filename: process.env.NODE_ENV !== 'production'
+    __dirname: __DEBUG__,
+    __filename: __DEBUG__
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -97,6 +97,9 @@ let config = {
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, '../dist/index.html'),
       template: path.resolve(__dirname, '../src/index.html'),
+    }),
+    new webpack.DefinePlugin({
+      __DEBUG__: __DEBUG__
     }),
     extractCSS,
     extractSCSS,

@@ -10,6 +10,9 @@ import '../../node_modules/font-awesome/css/font-awesome.min.css';
 
 import './scss';
 
+window.log = console.log.bind(this, `%c LOG `, 'background: #FF7818; color: white');
+if (!__DEBUG__) console.log = () => {};
+
 Vue.use(BootstrapVue);
 
 new Vue({
