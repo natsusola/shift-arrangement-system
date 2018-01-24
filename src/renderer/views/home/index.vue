@@ -48,6 +48,13 @@
         </tr>
       </tbody>
     </table>
+    <b-pagination
+      size="md"
+      :total-rows="total"
+      v-model="params.page"
+      :per-page="params.limit"
+      @change="onChangePage">
+    </b-pagination>
   </div>
 </template>
 
@@ -56,8 +63,11 @@
   import moment from 'moment';
 
   function apiListProject(params) {
-    return dbRequest(dbAPI.project.list)
-      .then(res => { this.projects = res.projects; });
+    return dbRequest(dbAPI.project.list, params)
+      .then(res => {
+        this.projects = res.projects;
+        this.total = res.total;
+      });
   }
 
   function apiRemoveProject(params) {
@@ -69,10 +79,11 @@
     data() {
       return {
         params: {
+          page: 1,
           limit: 10,
-          page: 1
         },
-        projects: []
+        projects: [],
+        total: 0
       }
     },
     mounted() {
@@ -81,12 +92,13 @@
     methods: {
       doRemoveProject(pj) {
         apiRemoveProject.call(this, pj)
-          .then(() => {
-            apiListProject.call(this, this.params);
-          });
+          .then(() => { apiListProject.call(this, this.params); });
       },
       doAddProject() {
         this.$router.push({name: 'detail', query: {_id: '', _rev: ''}});
+      },
+      onChangePage() {
+        apiListProject.call(this, this.params);
       }
     },
     filters: {
