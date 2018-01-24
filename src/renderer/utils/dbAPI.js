@@ -13,13 +13,18 @@ dbAPI.project.list = function projectList(params) {
   return MyDB.createIndex({ index: { fields: ['name'] } })
     .then(() => {
       return MyDB.find({
-        selector: {}
+        selector: {},
       });
     })
-    .then(res => ({
-      ...defaultObj,
-      projects: res.docs
-    }));
+    .then(res => {
+      let _page = params.page || 1;
+      let _limit = params.limit || 10;
+      return ({
+        ...defaultObj,
+        total: res.docs.length,
+        projects: res.docs.slice((_page - 1) * _limit, _page * _limit)
+      })
+    });
 };
 
 dbAPI.project.get = function projectGet(params) {
