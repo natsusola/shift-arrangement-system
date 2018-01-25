@@ -5,11 +5,31 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const __DEBUG__ = process.env.NODE_ENV !== 'production';
+const __TARGET__ = process.env.TARGET || 'electron';
+
+const TARGET_OPTIONS = {
+  web: {
+    output: 'web',
+    indexOutput: 'web',
+    target: 'web',
+    contentBase: path.join(__dirname, `../dist/web`),
+    filePubliPath: '../../'
+  },
+  electron: {
+    output: 'electron/renderer',
+    indexOutput: 'electron',
+    target: 'electron-renderer',
+    contentBase: path.join(__dirname, `../dist/electron`),
+    filePubliPath: '../../../'
+  }
+};
+
+const platform = TARGET_OPTIONS[__TARGET__];
 
 const hash = moment().format('YYMMDDHHmm');
 
-const extractCSS = new ExtractTextPlugin(`renderer/css/plugins.css?${hash}`);
-const extractSCSS = new ExtractTextPlugin(`renderer/css/main.css?${hash}`);
+const extractCSS = new ExtractTextPlugin(`${platform.output}/css/plugins.css?${hash}`);
+const extractSCSS = new ExtractTextPlugin(`${platform.output}/css/main.css?${hash}`);
 
 let config = {
   entry: {
@@ -20,11 +40,11 @@ let config = {
     ]
   },
   output: {
-    filename: `renderer/js/[name].js?${hash}`,
+    filename: `${platform.output}/js/[name].js?${hash}`,
     path: path.resolve(__dirname, '../dist'),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
-  target: 'electron-renderer',
+  target: platform.target,
   module: {
     rules: [
       {
@@ -62,10 +82,16 @@ let config = {
         test: /\.(png|gif|jpg|svg|ttf|woff|woff2|otf|eot)$/,
         use: {
           loader: 'file-loader',
-          options: { outputPath: 'renderer/assets/', publicPath: '../../' }
+          options: {
+            outputPath: `${platform.output}/assets/`,
+            publicPath: platform.filePubliPath
+          }
         }
       },
     ]
+  },
+  devServer: {
+    contentBase: platform.contentBase
   },
   resolve: {
     alias: {
@@ -87,11 +113,11 @@ let config = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
-      filename: 'renderer/js/[name].js'
+      filename: `${platform.output}/js/[name].js`
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../dist/index.html'),
+      filename: path.resolve(__dirname, `../dist/${platform.indexOutput}/index.html`),
       template: path.resolve(__dirname, '../src/index.html'),
     }),
     new webpack.DefinePlugin({
