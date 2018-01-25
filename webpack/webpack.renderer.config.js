@@ -28,14 +28,9 @@ let config = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        // include: [ require.resolve("bootstrap-vue") ],
+        exclude: /node_modules\/(?!(supports-color|prettier)\/).*/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['stage-0'],
-            plugins: ['transform-object-rest-spread']
-          }
         }
       },
       {
@@ -46,7 +41,7 @@ let config = {
             extractCSS: false,
             loaders: {
               scss: 'vue-style-loader!css-loader!sass-loader'
-            }
+            },
           }
         }
       },
