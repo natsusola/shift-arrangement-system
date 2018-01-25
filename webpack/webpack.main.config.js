@@ -6,8 +6,8 @@ let config = {
     main: path.resolve(__dirname, '../src/main/main.js')
   },
   output: {
-    filename: 'electron/main.js',
-    path: path.join(__dirname, '../dist')
+    filename: 'main.js',
+    path: path.join(__dirname, '../dist/electron')
   },
   devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : '',
   module: {

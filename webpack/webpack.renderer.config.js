@@ -28,8 +28,8 @@ const platform = TARGET_OPTIONS[__TARGET__];
 
 const hash = moment().format('YYMMDDHHmm');
 
-const extractCSS = new ExtractTextPlugin(`${platform.output}/css/plugins.css?${hash}`);
-const extractSCSS = new ExtractTextPlugin(`${platform.output}/css/main.css?${hash}`);
+const extractCSS = new ExtractTextPlugin(`css/plugins.css?${hash}`);
+const extractSCSS = new ExtractTextPlugin(`css/main.css?${hash}`);
 
 let config = {
   entry: {
@@ -40,8 +40,8 @@ let config = {
     ]
   },
   output: {
-    filename: `${platform.output}/js/[name].js?${hash}`,
-    path: path.resolve(__dirname, '../dist'),
+    filename: `js/[name].js?${hash}`,
+    path: path.resolve(__dirname, `../dist/${platform.output}`),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
   target: platform.target,
@@ -83,15 +83,12 @@ let config = {
         use: {
           loader: 'file-loader',
           options: {
-            outputPath: `${platform.output}/assets/`,
+            outputPath: `assets/`,
             publicPath: platform.filePubliPath
           }
         }
       },
     ]
-  },
-  devServer: {
-    contentBase: platform.contentBase
   },
   resolve: {
     alias: {
@@ -113,11 +110,11 @@ let config = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
-      filename: `${platform.output}/js/[name].js`
+      filename: `js/[name].js`
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, `../dist/${platform.indexOutput}/index.html`),
+      filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.html'),
     }),
     new webpack.DefinePlugin({
@@ -127,6 +124,12 @@ let config = {
     extractSCSS,
   ]
 };
+
+if (process.env.TARGET === 'web') {
+  config.devServer = {
+    contentBase: platform.contentBase
+  };
+}
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
