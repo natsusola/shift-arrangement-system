@@ -7,7 +7,7 @@ let config = {
   },
   output: {
     filename: 'main.js',
-    path: path.join(__dirname, '../dist')
+    path: path.join(__dirname, '../dist/electron')
   },
   devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : '',
   module: {

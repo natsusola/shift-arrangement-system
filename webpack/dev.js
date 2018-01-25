@@ -12,6 +12,8 @@ let electronProcess = null;
 let manualRestart = false;
 let hotMiddleware;
 
+process.env.TARGET = 'electron';
+
 function startRenderer() {
   return new Promise((resolve, reject) => {
     rendererConfig.entry.app = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.app);
@@ -31,6 +33,7 @@ function startRenderer() {
     const server = new webpackDevServer(
       compiler,
       {
+        contentBase: path.join(__dirname, '../dist/electron'),
         before (app, ctx) {
           app.use(hotMiddleware)
           ctx.middleware.waitUntilValid(() => { resolve(); })
@@ -38,9 +41,7 @@ function startRenderer() {
       }
     );
 
-
-    server.listen(8080);
-    // resolve();
+    server.listen(9090);
   });
 };
 
@@ -75,7 +76,7 @@ function startMain() {
 }
 
 function startElectron() {
-  electronProcess = spawn(electron, [path.resolve(__dirname, '../dist/main.js')]);
+  electronProcess = spawn(electron, ['--inspect=5858', path.join(__dirname, '../dist/electron/main.js')]);
   electronProcess.on('close', () => {
     if (!manualRestart) process.exit()
   })

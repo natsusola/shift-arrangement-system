@@ -14,8 +14,12 @@ require('electron-debug')({ showDevTools: true });
 let mainWindow;
 let win;
 
+if (process.env.NODE_ENV !== 'development') {
+  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+}
+
 const winURL = process.env.NODE_ENV !== 'production'
-  ? 'http://localhost:8080'
+  ? 'http://localhost:9090'
   : `file://${__dirname}/index.html`;
 
 function createWindow () {
@@ -26,7 +30,7 @@ function createWindow () {
   });
 
   mainWindow = new BrowserWindow({
-    width: 1400,
+    width: 1500,
     height: 900,
     // loadURL: 'http://localhost:8080',
     x: mainWindowState.x,

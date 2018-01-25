@@ -5,8 +5,11 @@
   "main": "./dist/main.js",
   "scripts": {
     "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
-    "dev": "node ./webpack/dev",
-    "pro": "npm run pro:main && npm run pro:renderer",
+    "dev": "npm run dev:elec & npm run dev:web &",
+    "dev:web": "TARGET=web webpack-dev-server --config ./webpack/webpack.renderer.config.js",
+    "dev:elec": "node ./webpack/dev",
+    "pro": "npm run pro:main && npm run pro:renderer && npm run pro:web",
+    "pro:web": "NODE_ENV=production TARGET=web webpack --progress --colors --config ./webpack/webpack.renderer.config.js",
     "pro:main": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.main.config.js",
     "pro:renderer": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.renderer.config.js"
   },
@@ -63,6 +66,7 @@
     "bluebird": "^3.5.1",
     "bootstrap": "^4.0.0-alpha.6",
     "bootstrap-vue": "^1.4.0",
+    "express": "^4.16.2",
     "file-saver": "^1.3.3",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
