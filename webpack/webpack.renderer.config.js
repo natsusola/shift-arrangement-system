@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const __DEBUG__ = process.env.NODE_ENV !== 'production';
+
 const hash = moment().format('YYMMDDHHmm');
 
 const extractCSS = new ExtractTextPlugin(`renderer/css/plugins.css?${hash}`);
@@ -68,7 +69,7 @@ let config = {
   },
   resolve: {
     alias: {
-      vue: `vue/dist/vue${__DEBUG__ ? '' : '.min'}.js`,
+      'vue$': `vue/dist/vue.esm.js`,
       '@': path.resolve(__dirname, '../src/renderer'),
     },
     extensions: ['.js', '.vue', '.json', '.scss']
