@@ -1,7 +1,7 @@
 ##簡易排班系統
 
 ###說明
-* 一套簡單的排班系統。
+* 簡單的排班系統。
 * [Vue](https://github.com/vuejs/vue) + [Electron](https://github.com/electron/electron)
 的練習作品。
 * 使用 [Pouchdb](https://github.com/pouchdb/pouchdb)，所以資料都是存在本地
@@ -9,10 +9,22 @@
 * webpack、編譯腳本大部分參照 [electron-vue](https://github.com/SimulatedGREG/electron-vue)
 
 ### Demo
-* ####[Live Demo]()
+* ####Live Demo(coming soon...)
 
 ###開始
-* `git clone` 後執行 `npm install`
-* 開發：`npm run dev`
-* 出版：`npm run pro`
-* 打包程式：`npm run bulid`
+
+####安裝
+* `git clone`
+* `npm install`
+
+####開發
+* electron: `npm run dev:elec`
+* web: `npm run dev:web`
+* electron & web: `npm run dev`
+
+####打包
+* electron-main: `npm run pro:main`
+* electron-renderer: `npm run pro:renderer`
+* web: `npm run pro:web`
+* all: `npm run pro`
+* 編譯 electron 程式: `npm run bulid`
