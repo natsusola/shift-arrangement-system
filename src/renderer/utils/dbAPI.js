@@ -17,13 +17,14 @@ dbAPI.project.list = function projectList(params) {
       });
     })
     .then(res => {
-      let _page = params.page || 1;
+      let _page = params.page;
       let _limit = params.limit || 10;
-      return ({
+      return {
+        
         ...defaultObj,
         total: res.docs.length,
         projects: res.docs.slice((_page - 1) * _limit, _page * _limit)
-      })
+      };
     });
 };
 

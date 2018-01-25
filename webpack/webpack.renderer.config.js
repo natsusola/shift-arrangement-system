@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const __DEBUG__ = process.env.NODE_ENV !== 'production';
+
 const hash = moment().format('YYMMDDHHmm');
 
 const extractCSS = new ExtractTextPlugin(`renderer/css/plugins.css?${hash}`);
@@ -15,7 +16,7 @@ let config = {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
     vendors: [
       'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment',
-      'pouchdb-browser',
+      'pouchdb-browser', 'pouchdb-find', 'file-saver', 'xlsx'
     ]
   },
   output: {
@@ -28,14 +29,9 @@ let config = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        // include: [ require.resolve("bootstrap-vue") ],
+        exclude: /node_modules\/(?!(supports-color|prettier)\/).*/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['stage-0'],
-            plugins: ['transform-object-rest-spread']
-          }
         }
       },
       {
@@ -46,7 +42,7 @@ let config = {
             extractCSS: false,
             loaders: {
               scss: 'vue-style-loader!css-loader!sass-loader'
-            }
+            },
           }
         }
       },
@@ -73,21 +69,21 @@ let config = {
   },
   resolve: {
     alias: {
-      vue: 'vue/dist/vue.js',
+      'vue$': `vue/dist/vue.esm.js`,
       '@': path.resolve(__dirname, '../src/renderer'),
     },
     extensions: ['.js', '.vue', '.json', '.scss']
   },
   node: {
-    __dirname: process.env.NODE_ENV !== 'production',
-    __filename: process.env.NODE_ENV !== 'production'
+    __dirname: __DEBUG__,
+    __filename: __DEBUG__
   },
   plugins: [
     new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        Popper: 'popper.js',
-        Tether: 'tether',
+      $: 'jquery',
+      jQuery: 'jquery',
+      Popper: 'popper.js',
+      Tether: 'tether',
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
@@ -98,6 +94,9 @@ let config = {
       filename: path.resolve(__dirname, '../dist/index.html'),
       template: path.resolve(__dirname, '../src/index.html'),
     }),
+    new webpack.DefinePlugin({
+      __DEBUG__: __DEBUG__,
+    }),
     extractCSS,
     extractSCSS,
   ]
@@ -106,7 +105,7 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
     }),
     new webpack.optimize.UglifyJsPlugin()
   );
