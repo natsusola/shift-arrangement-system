@@ -68,7 +68,7 @@ let config = {
   },
   resolve: {
     alias: {
-      vue: 'vue/dist/vue.js',
+      vue: `vue/dist/vue${__DEBUG__ ? '' : '.min'}.js`,
       '@': path.resolve(__dirname, '../src/renderer'),
     },
     extensions: ['.js', '.vue', '.json', '.scss']
@@ -79,10 +79,10 @@ let config = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-        Popper: 'popper.js',
-        Tether: 'tether',
+      $: 'jquery',
+      jQuery: 'jquery',
+      Popper: 'popper.js',
+      Tether: 'tether',
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
@@ -94,7 +94,7 @@ let config = {
       template: path.resolve(__dirname, '../src/index.html'),
     }),
     new webpack.DefinePlugin({
-      __DEBUG__: __DEBUG__
+      __DEBUG__: __DEBUG__,
     }),
     extractCSS,
     extractSCSS,
@@ -104,7 +104,7 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
     }),
     new webpack.optimize.UglifyJsPlugin()
   );

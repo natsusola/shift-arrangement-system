@@ -14,7 +14,6 @@ let config = {
     rules: [
       {
         test: /\.js$/,
-        // exclude: /node_modules\/(?!(electron-debug|electron)\/).*/,
         use: {
           loader: 'babel-loader',
         }
@@ -36,9 +35,9 @@ let config = {
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
     }),
-    new webpack.optimize.UglifyJsPlugin({cache: true})
+    new webpack.optimize.UglifyJsPlugin()
   );
 }
 
