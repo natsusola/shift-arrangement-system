@@ -9,6 +9,7 @@ const __TARGET__ = process.env.TARGET || 'electron';
 
 const TARGET_OPTIONS = {
   web: {
+    name: 'WEB',
     output: 'web',
     indexOutput: 'web',
     target: 'web',
@@ -16,6 +17,7 @@ const TARGET_OPTIONS = {
     filePubliPath: '../../'
   },
   electron: {
+    name: 'ELECTRON',
     output: 'electron/renderer',
     indexOutput: 'electron',
     target: 'electron-renderer',
@@ -119,6 +121,7 @@ let config = {
     }),
     new webpack.DefinePlugin({
       __DEBUG__: __DEBUG__,
+      __TARGET__: JSON.stringify(platform.name)
     }),
     extractCSS,
     extractSCSS,

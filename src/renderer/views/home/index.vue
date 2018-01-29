@@ -67,7 +67,11 @@
 <script>
   import { dbRequest, dbAPI } from '@/utils';
   import moment from 'moment';
-  import { shell } from 'electron';
+
+  let shell;
+  if (__TARGET__ === 'ELECTRON') {
+    import('electron').then(res => { shell = res.shell; });
+  }
 
   function apiListProject(params) {
     return dbRequest(dbAPI.project.list, params)
@@ -108,7 +112,11 @@
         apiListProject.call(this, this.params);
       },
       doOpenLink(url) {
-        shell.openExternal(url);
+        if (__TARGET__ === 'ELECTRON') {
+          shell.openExternal(url);
+        } else {
+          window.open(url);
+        }
       }
     },
     filters: {
