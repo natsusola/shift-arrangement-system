@@ -213,7 +213,10 @@
             let _wb = XLSX.read(_data, { type: 'binary' });
             let _requiredKeys = { A1: 'name', B1: 'memberCount' };
             for (let key in _requiredKeys) {
-              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) return;
+              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) {
+                this.$emit('doShowModal', '[錯誤] EXCEL 格式錯誤!');
+                return;
+              }
             }
             let _xlEvents = XLSX.utils.sheet_to_json(_wb.Sheets[_wb.SheetNames[0]]);
             for (let i = 0; i < _xlEvents.length; i++) {

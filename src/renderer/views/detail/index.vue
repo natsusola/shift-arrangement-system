@@ -31,20 +31,24 @@
 
         <member-col
           :members.sync="members"
-          :membersIndex.sync="membersIndex">
+          :membersIndex.sync="membersIndex"
+          @doShowModal="doShowModal">
         </member-col>
 
         <event-col
           :events.sync="events"
           :members.sync="members"
-          :membersIndex.sync="membersIndex">
+          :membersIndex.sync="membersIndex"
+          @doShowModal="doShowModal">
         </event-col>
+
       </div>
     </div>
     <div class="detail-footer">
       <button class="btn btn-primary m-r-px-20" @click="doSave">存檔</button>
       <button class="btn btn-secondary" @click="doBack">返回</button>
     </div>
+    <alert-modal :text="alertText"></alert-modal>
   </div>
 </template>
 
@@ -52,7 +56,7 @@
   import XLSX from 'xlsx';
   import moment from 'moment';
   import { saveAs } from 'file-saver';
-  import { MemberCol, EventCol } from './components';
+  import { MemberCol, EventCol, AlertModal } from './components';
 
   import { dbRequest, dbAPI } from '@/utils';
 
@@ -85,6 +89,8 @@
         members: [],
         membersIndex: {},
         events: [],
+        alertText: 'we',
+        showModal: false
       };
     },
     mounted() {
@@ -106,6 +112,10 @@
       }
     },
     methods: {
+      doShowModal(text) {
+        this.alertText = text;
+        this.$root.$emit('bv::show::modal','alert-modal');
+      },
       doBack() {
         this.$router.push('/');
       },
@@ -198,7 +208,8 @@
     },
     components: {
       'member-col': MemberCol,
-      'event-col': EventCol
+      'event-col': EventCol,
+      'alert-modal': AlertModal
     },
   }
 </script>
