@@ -1,0 +1,10 @@
+.home-wrap {
+  .fa-github {
+    float: right;
+    transition: transform .4s 0s ease-in-out;
+    &:hover {
+      color: rgba(#80007f, 0.73);
+      transform: rotateY(360deg);
+    }
+  }
+}
