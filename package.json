@@ -41,7 +41,7 @@
     "chalk": "^2.3.0",
     "css-loader": "^0.28.8",
     "del": "^3.0.0",
-    "electron": "~1.7.8",
+    "electron": "~1.7.11",
     "electron-builder": "^19.54.0",
     "electron-debug": "^1.5.0",
     "electron-rebuild": "^1.7.3",
