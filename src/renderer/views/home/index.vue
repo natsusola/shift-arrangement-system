@@ -1,6 +1,12 @@
 <template>
   <div class="home-wrap">
-    <h3>列表</h3>
+    <h3>
+      <span>列表</span>
+      <i id="github-icon"
+        class="fa fa-github icon-btn" aria-hidden="true"
+        @click="doOpenLink('https://github.com/natsusola/shift-arrangment-system')">
+      </i>
+    </h3>
     <button class="btn btn-primary m-b-px-10"
       @click="doAddProject">
       新增專案
@@ -61,6 +67,7 @@
 <script>
   import { dbRequest, dbAPI } from '@/utils';
   import moment from 'moment';
+  import { shell } from 'electron';
 
   function apiListProject(params) {
     return dbRequest(dbAPI.project.list, params)
@@ -99,6 +106,9 @@
       },
       onChangePage() {
         apiListProject.call(this, this.params);
+      },
+      doOpenLink(url) {
+        shell.openExternal(url);
       }
     },
     filters: {
