@@ -1,6 +1,6 @@
-##簡易排班系統
+## 簡易排班系統
 
-###說明
+### 說明
 * 簡單的排班系統。
 * [Vue](https://github.com/vuejs/vue) + [Electron](https://github.com/electron/electron)
 的練習作品。
@@ -11,18 +11,18 @@
 ### Demo
 * ####Live Demo(coming soon...)
 
-###開始
+### 開始
 
-####安裝
+#### 安裝
 * `git clone`
 * `npm install`
 
-####開發
+#### 開發
 * electron: `npm run dev:elec`
 * web: `npm run dev:web`
 * electron & web: `npm run dev`
 
-####打包
+#### 打包
 * electron-main: `npm run pro:main`
 * electron-renderer: `npm run pro:renderer`
 * web: `npm run pro:web`
