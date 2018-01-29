@@ -104,20 +104,13 @@
         },
       }
     },
-    // props: {
-    //   members: {
-    //     type: 'Array',
-    //     require: true
-    //   },
-    //   membersIndex: {
-    //     type: 'Object',
-    //     require: true,
-    //   }
-    // },
     props: ['members', 'membersIndex'],
     methods: {
       doAddMember() {
-        if (this.membersIndex[this.memberForm.id]) return;
+        if (this.membersIndex[this.memberForm.id]) {
+          this.$emit('doShowModal', '[錯誤] ID 重複!');
+          return;
+        }
         this.membersIndex[this.memberForm.id] = {...this.memberForm, count: 0};
         this.members.push(this.membersIndex[this.memberForm.id]);
         this.memberForm = {};
@@ -143,14 +136,20 @@
             /* 檢查格式 */
             let _requiredKeys = { A1: 'name', B1: 'id' };
             for (let key in _requiredKeys) {
-              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) return;
+              if (_wb.Sheets[_wb.SheetNames[0]][key].v !== _requiredKeys[key]) {
+                this.$emit('doShowModal', '[錯誤] EXCEL 格式錯誤!');
+                return;
+              }
             }
             let _xlMembers = XLSX.utils.sheet_to_json(_wb.Sheets[_wb.SheetNames[0]]);
 
             /* 驗證 id 沒有重複 */
             let _validObj = {};
             for (let i = 0; i < _xlMembers.length; i++) {
-              if (_validObj[_xlMembers[i].id] || this.membersIndex[_xlMembers[i].id]) return;
+              if (_validObj[_xlMembers[i].id] || this.membersIndex[_xlMembers[i].id]) {
+                this.$emit('doShowModal', '[錯誤] ID 重複!');
+                return;
+              }
               _validObj[_xlMembers[i].id] = {..._xlMembers[i], count: 0};
             }
             /* 為了順序和 Reference 再跑一次迴圈 */

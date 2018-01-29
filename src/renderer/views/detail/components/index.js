@@ -1,2 +1,3 @@
-export { default as MemberCol } from './MemberCol.vue';
-export { default as EventCol } from './EventCol.vue';
+export { default as MemberCol } from './MemberCol';
+export { default as EventCol } from './EventCol';
+export { default as AlertModal } from './AlertModal';
