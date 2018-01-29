@@ -715,3 +715,14 @@ ul {
 
 .member-dropmenu-group .search-group, .member-dropmenu-group .dropdown-item {
   padding: 0 .7rem; }
+
+.alert-modal-body {
+  background: #ff8181;
+  color: white; }
+
+.home-wrap .fa-github {
+  float: right;
+  transition: transform .4s 0s ease-in-out; }
+  .home-wrap .fa-github:hover {
+    color: rgba(128, 0, 127, 0.73);
+    transform: rotateY(360deg); }
