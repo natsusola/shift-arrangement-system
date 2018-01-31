@@ -11,6 +11,10 @@
       @click="doAddProject">
       新增專案
     </button>
+    <button class="btn btn-primary m-b-px-10"
+      @click="doExportDB">
+      匯出資料庫
+    </button>
     <table class="table table-bordered">
       <thead class="thead-default">
         <tr>
@@ -66,6 +70,7 @@
 
 <script>
   import { dbRequest, dbAPI } from '@/utils';
+  import { saveAs } from 'file-saver';
   import moment from 'moment';
 
   let shell;
@@ -83,6 +88,10 @@
 
   function apiRemoveProject(params) {
     return dbRequest(dbAPI.project.remove, params);
+  }
+
+  function apiDumpDb() {
+    return dbRequest(dbAPI.sys.dumpDB);
   }
 
   export default {
@@ -117,6 +126,14 @@
         } else {
           window.open(url);
         }
+      },
+      doExportDB() {
+        apiDumpDb().then(res => {
+          saveAs(
+            new Blob([res.data], {type: 'text/plain;charset=utf-8'}),
+            `${moment().format('YYMMDDHHmmss')}.pdb`
+          );
+        });
       }
     },
     filters: {

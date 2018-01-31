@@ -1,4 +1,4 @@
-import Promise from 'bluebird';
+// import Promise from 'bluebird';
 import MyDB from '@/db';
 
 const dbRequest = (fn, params) => {

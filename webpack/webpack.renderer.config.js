@@ -96,6 +96,7 @@ let config = {
     alias: {
       'vue$': `vue/dist/vue.esm.js`,
       '@': path.resolve(__dirname, '../src/renderer'),
+      'pouchdb-promise':  'pouchdb-promise/lib/index', // 不加 pouchdb-utils 會出錯
     },
     extensions: ['.js', '.vue', '.json', '.scss']
   },
@@ -112,7 +113,7 @@ let config = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendors'],
-      filename: `js/[name].js`
+      filename: `js/[name].js?${hash}`
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({

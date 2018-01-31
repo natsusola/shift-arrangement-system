@@ -1,12 +1,25 @@
 import MyDB from '@/db';
+import MemoryStream from 'memorystream';
 
 const dbAPI = {
+  sys: {},
   project: {}
 };
 
 const defaultObj = {
   code: 0,
   msg: 'success'
+};
+
+dbAPI.sys.dumpDB = function dumpDB() {
+  let _dumpString = '';
+  let _stream = new MemoryStream();
+  _stream.on('data', (chunk) => { _dumpString += chunk.toString(); });
+  return MyDB.dump(_stream)
+    .then(() => ({
+      ...defaultObj,
+      data: _dumpString
+    }));
 };
 
 dbAPI.project.list = function projectList(params) {
@@ -20,7 +33,6 @@ dbAPI.project.list = function projectList(params) {
       let _page = params.page;
       let _limit = params.limit || 10;
       return {
-        
         ...defaultObj,
         total: res.docs.length,
         projects: res.docs.slice((_page - 1) * _limit, _page * _limit)
@@ -44,7 +56,7 @@ dbAPI.project.add = function projectAdd(params) {
     }));
 };
 
-dbAPI.project.update = function projectAdd(params) {
+dbAPI.project.update = function projectUpdate(params) {
   params.updated_at = (new Date()).toISOString();
   return MyDB.put(params)
     .then(res => ({
