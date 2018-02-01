@@ -10,11 +10,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'homePage',
+      name: 'dashboard',
       component: HomePage
     },
     {
-      path: '/detail/:id',
+      path: '/detail',
       name: 'detail',
       component: Detail
     },

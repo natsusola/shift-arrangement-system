@@ -1,11 +1,15 @@
 <template>
-  <div class="content">
+  <div class="__layout">
     <router-view></router-view>
+    <toast></toast>
   </div>
 </template>
 
 <script>
+  import { Toast } from '@/views/utils';
   export default {
-    name: 'Vue'
+    components: {
+      'toast': Toast
+    }
   }
 </script>

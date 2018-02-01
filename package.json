@@ -1,35 +1,63 @@
 {
-  "name": "electron-quick-start",
+  "name": "shift-arrangment",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "description": "A shift arrangment system",
+  "main": "./dist/main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "node ./webpack/dev"
+    "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
+    "dev": "npm run dev:elec & npm run dev:web &",
+    "dev:web": "TARGET=web webpack-dev-server --config ./webpack/webpack.renderer.config.js",
+    "dev:elec": "node ./webpack/dev",
+    "pro": "npm run pro:main && npm run pro:renderer && npm run pro:web",
+    "pro:web": "NODE_ENV=production TARGET=web webpack --progress --colors --config ./webpack/webpack.renderer.config.js",
+    "pro:main": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.main.config.js",
+    "pro:renderer": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.renderer.config.js"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Vue"
   ],
-  "author": "GitHub",
+  "build": {
+    "productName": "shift-arrangment",
+    "appId": "natsu.shift-arrangment",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/*",
+      "dist/**/*"
+    ]
+  },
+  "author": "Natsu",
   "license": "CC0-1.0",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "chalk": "^2.3.0",
     "css-loader": "^0.28.8",
-    "electron": "~1.7.8",
+    "del": "^3.0.0",
+    "electron": "~1.7.11",
+    "electron-builder": "^19.54.0",
     "electron-debug": "^1.5.0",
+    "electron-rebuild": "^1.7.3",
     "electron-window-state": "^4.1.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "fs": "0.0.1-security",
     "html-webpack-plugin": "^2.30.1",
+    "memorystream": "^0.3.1",
+    "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
+    "node-sass": "^4.7.2",
+    "pouchdb-load": "^1.4.6",
+    "pouchdb-replication-stream": "^1.2.9",
+    "sass-loader": "^6.0.6",
     "style-loader": "^0.19.1",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.7.0",
@@ -40,11 +68,26 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0-beta.2",
+    "bluebird": "^3.5.1",
+    "bootstrap": "^4.0.0-alpha.6",
     "bootstrap-vue": "^1.4.0",
+    "express": "^4.16.2",
+    "file-saver": "^1.3.3",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "leveldown": "^2.1.1",
+    "levelup": "^2.0.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
+    "popper.js": "^1.12.9",
+    "pouchdb": "^6.4.1",
+    "pouchdb-browser": "^6.4.1",
+    "pouchdb-find": "^6.4.1",
+    "tether": "^1.4.3",
     "vue": "^2.5.13",
-    "vue-router": "^3.0.1"
+    "vue-class-component": "^6.1.2",
+    "vue-router": "^3.0.1",
+    "vue-toast": "^3.1.0",
+    "xlsx": "^0.11.17"
   }
 }

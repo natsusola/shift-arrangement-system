@@ -1,0 +1,54 @@
+.detail-wrap {
+  overflow: auto;
+  height: 100%;
+  margin-bottom: 70px;
+  table td {
+    white-space: nowrap;
+  }
+  .col-members, col-events {
+    padding: 0 15px
+  }
+}
+
+.member-item {
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.detail-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 20px;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #aaa;
+  text-align: right;
+}
+
+.btn + .dropdown-toggle-split {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.reminder-dropdown {
+  .dropdown-menu {
+    padding: 0.5rem;
+  }
+}
+
+.form-reminder {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.member-dropmenu-group {
+  .search-group, .dropdown-item {
+    padding: 0 .7rem;
+  }
+}
+
+.alert-modal-body {
+  background: #ff8181;
+  color: white;
+}
