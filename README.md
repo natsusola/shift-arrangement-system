@@ -1,6 +1,6 @@
 ## 簡易排班系統
 
-### 說明
+### 描述
 * 簡單的排班系統。
 * [Vue](https://github.com/vuejs/vue) + [Electron](https://github.com/electron/electron)
 的練習作品。
@@ -9,7 +9,7 @@
 * webpack、編譯腳本大部分參照 [electron-vue](https://github.com/SimulatedGREG/electron-vue)
 
 ### Demo
-* ####Live Demo(coming soon...)
+* #### [Live Demo](http://shift-sys.natsusola.net/)
 
 ### 開始
 
