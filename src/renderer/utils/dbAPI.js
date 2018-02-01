@@ -1,5 +1,7 @@
-import MyDB from '@/db';
+import PouchDB from '@/db';
 import MemoryStream from 'memorystream';
+
+let MyDB = new PouchDB('my_db');
 
 const dbAPI = {
   sys: {},
@@ -21,6 +23,13 @@ dbAPI.sys.dumpDB = function dumpDB() {
       data: _dumpString
     }));
 };
+
+dbAPI.sys.importDB = function importDB(params) {
+  return MyDB.destroy()
+    .then(() => { MyDB = new PouchDB('my_db'); })
+    .then(() => MyDB.loadIt(params.data))
+    .then(() => ({...defaultObj}));
+}
 
 dbAPI.project.list = function projectList(params) {
   return MyDB.createIndex({ index: { fields: ['name'] } })
@@ -65,7 +74,7 @@ dbAPI.project.update = function projectUpdate(params) {
 };
 
 dbAPI.project.remove = function projectRemove(params) {
-  return MyDB.remove(params)
+  return MyDB.remove({_id: params._id, _rev: params._rev})
     .then(res => ({
       ...defaultObj
     }));
