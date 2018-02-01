@@ -7,6 +7,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '../../node_modules/font-awesome/css/font-awesome.min.css';
+import 'vue-toast/dist/vue-toast.min.css';
 
 import './scss';
 

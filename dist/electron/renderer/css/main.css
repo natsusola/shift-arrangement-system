@@ -679,6 +679,15 @@ ul {
 .fa-question-circle-o {
   color: #f78002; }
 
+.vue-toast_container {
+  opacity: .6;
+  padding: 0;
+  border-radius: 5px; }
+  .vue-toast_container .vue-toast_message {
+    padding: 10px 22px 10px 10px; }
+  .vue-toast_container._danger {
+    background-color: #e02828; }
+
 .detail-wrap {
   overflow: auto;
   height: 100%;

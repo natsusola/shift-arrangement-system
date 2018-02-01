@@ -90,10 +90,11 @@
         membersIndex: {},
         events: [],
         alertText: 'we',
-        showModal: false
+        showModal: false,
       };
     },
     mounted() {
+      this.toastElem = this.$refs.toast;
       if (this.$route.query._id) {
         dbRequest(dbAPI.project.get, {_id: this.$route.query._id})
           .then(res => {
@@ -108,7 +109,8 @@
               this.membersIndex[_members[i].id] = {..._members[i]};
               this.members.push(this.membersIndex[_members[i].id]);
             }
-          });
+          })
+          .catch(err => { this.$router.push('/'); });
       }
     },
     methods: {
@@ -209,7 +211,7 @@
     components: {
       'member-col': MemberCol,
       'event-col': EventCol,
-      'alert-modal': AlertModal
+      'alert-modal': AlertModal,
     },
   }
 </script>
