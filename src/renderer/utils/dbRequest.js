@@ -1,5 +1,14 @@
 // import Promise from 'bluebird';
-import MyDB from '@/db';
+import { Toast } from '@/views/utils';
+
+const errorHandler = (err) => {
+  const _err = {
+    code: err.status,
+    msg: err.name
+  };
+  Toast.showToast(`[${_err.code}] ${_err.msg}.`);
+  throw _err;
+};
 
 const dbRequest = (fn, params) => {
   console.log(`%c REQ `, 'background: blue; color: white', fn.name, params);
@@ -10,7 +19,7 @@ const dbRequest = (fn, params) => {
     })
     .catch(err => {
       console.log(`%c RES `, 'background: red; color: white', fn.name, err);
-      throw err;
+      errorHandler(err);
     });
 };
 
