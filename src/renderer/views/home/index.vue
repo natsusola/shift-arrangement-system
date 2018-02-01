@@ -7,10 +7,40 @@
         @click="doOpenLink('https://github.com/natsusola/shift-arrangment-system')">
       </i>
     </h3>
-    <button class="btn btn-primary m-b-px-10"
-      @click="doAddProject">
-      新增專案
-    </button>
+    <div class="m-b-px-10">
+      <button class="btn btn-primary"
+        style="float:right"
+        @click="doAddProject">
+        新增專案
+      </button>
+      <button class="btn btn-success"
+        @click="doExportDB">
+        <i class="fa fa-upload" aria-hidden="true"></i>匯出資料庫
+      </button>
+      <b-dropdown
+        class="reminder-dropdown" variant="link" size="sm" no-caret
+        style="min-width: 16rem"
+        @hidden="onImportDropHidden">
+        <template slot="button-content">
+          <button class="btn btn-success p-px-0">
+            <i class="fa fa-download" aria-hidden="true"></i>匯入資料庫
+          </button>
+        </template>
+        <div class="m-b-px-5">
+          <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+          匯入將會覆蓋目前所有資料！
+        </div>
+        <div class="row">
+          <input class="form-control col-9 m-r-px-5" type="file"
+            ref="dbFileInput" accept=".pdb"
+            @change="onUploadDbFile($event)"/>
+          <button class="btn btn-danger" :disabled="!dbDataStr"
+            @click="doImportDbFile">
+            匯入
+          </button>
+        </div>
+      </b-dropdown>
+    </div>
     <table class="table table-bordered">
       <thead class="thead-default">
         <tr>
@@ -66,6 +96,7 @@
 
 <script>
   import { dbRequest, dbAPI } from '@/utils';
+  import { saveAs } from 'file-saver';
   import moment from 'moment';
 
   let shell;
@@ -85,6 +116,10 @@
     return dbRequest(dbAPI.project.remove, params);
   }
 
+  function apiDumpDb() {
+    return dbRequest(dbAPI.sys.dumpDB);
+  }
+
   export default {
     name: 'home',
     data() {
@@ -94,7 +129,8 @@
           limit: 10,
         },
         projects: [],
-        total: 0
+        total: 0,
+        dbDataStr: ''
       }
     },
     mounted() {
@@ -117,11 +153,40 @@
         } else {
           window.open(url);
         }
+      },
+      doExportDB() {
+        apiDumpDb().then(res => {
+          saveAs(
+            new Blob([res.data], {type: 'text/plain;charset=utf-8'}),
+            `${moment().format('YYMMDDHHmmss')}.pdb`
+          );
+        });
+      },
+      onImportDropHidden() {
+        this.dbDataStr = '';
+        this.$refs.dbFileInput.value = '';
+      },
+      onUploadDbFile(e) {
+        if (e.target.files[0]) {
+          let _reader = new FileReader();
+          _reader.onload = (e) => {
+            this.dbDataStr = e.target.result;
+          };
+          _reader.readAsText(e.target.files[0])
+        }
+      },
+      doImportDbFile() {
+        dbRequest(dbAPI.sys.importDB, {data: this.dbDataStr})
+          .then(() => {
+            this.dbDataStr = '';
+            this.$refs.dbFileInput.value = '';
+            apiListProject.call(this, this.params);
+          });
       }
     },
     filters: {
       dateFormat: (date) => {
-        return moment(date).format('YYYY/MM/DD HH:mm:ss');
+        return date ? moment(date).format('YYYY/MM/DD HH:mm:ss') : '';
       }
     }
   };
