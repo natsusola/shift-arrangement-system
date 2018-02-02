@@ -65,7 +65,8 @@
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.1",
-    "webpack-hot-middleware": "^2.21.0"
+    "webpack-hot-middleware": "^2.21.0",
+    "webpack-md5-hash": "0.0.6"
   },
   "dependencies": {
     "bluebird": "^3.5.1",

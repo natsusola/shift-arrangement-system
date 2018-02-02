@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackMd5Hash = require('webpack-md5-hash');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const __DEBUG__ = process.env.NODE_ENV !== 'production';
@@ -28,21 +29,20 @@ const TARGET_OPTIONS = {
 
 const platform = TARGET_OPTIONS[__TARGET__];
 
-const hash = moment().format('YYMMDDHHmm');
+const datetime = moment().format('YYYY/MM/DD HH:mm ZZ');
 
-const extractCSS = new ExtractTextPlugin(`css/plugins.css?${hash}`);
-const extractSCSS = new ExtractTextPlugin(`css/main.css?${hash}`);
+const extractCSS = new ExtractTextPlugin(`css/plugins.css?${__DEBUG__ ? '' : '[contenthash:8]'}`);
+const extractSCSS = new ExtractTextPlugin(`css/main.css?${__DEBUG__ ? '' : '[contenthash:8]'}`);
 
 let config = {
   entry: {
     app: path.resolve(__dirname, '../src/renderer/index.js'),
-    vendors: [
-      'vue', 'vue-router', 'bootstrap-vue', 'lodash', 'moment',
-      'pouchdb-browser', 'pouchdb-find', 'file-saver', 'xlsx'
-    ]
+    vue: ['vue', 'vue-router', 'bootstrap-vue'],
+    pouchdb: ['pouchdb-browser', 'pouchdb-find', 'pouchdb-load', 'pouchdb-replication-stream'],
+    vendors: ['lodash', 'moment', 'file-saver', 'xlsx'],
   },
   output: {
-    filename: `js/[name].js?${hash}`,
+    filename: `js/[name].js?${__DEBUG__ ? '' : '[chunkhash:8]'}`,
     path: path.resolve(__dirname, `../dist/${platform.output}`),
   },
   devtool: __DEBUG__ ? 'source-map' : '',
@@ -105,6 +105,7 @@ let config = {
     __filename: __DEBUG__
   },
   plugins: [
+    new WebpackMd5Hash(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -112,13 +113,13 @@ let config = {
       Tether: 'tether',
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendors'],
-      filename: `js/[name].js?${hash}`
+      names: ['vendors', 'pouchdb', 'vue'],
+      filename: `js/[name].js?${__DEBUG__ ? '' : '[chunkhash:8]'}`
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.resolve(__dirname, '../src/index.html'),
+      updated_at: datetime
     }),
     new webpack.DefinePlugin({
       __DEBUG__: __DEBUG__,
@@ -135,12 +136,14 @@ if (process.env.TARGET === 'web') {
   };
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (!__DEBUG__) {
   config.plugins.push(
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
-    }),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
+    new webpack.optimize.UglifyJsPlugin({parallel: true})
+  );
+} else {
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin()
   );
 }
 
