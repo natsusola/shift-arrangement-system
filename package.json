@@ -6,12 +6,12 @@
   "scripts": {
     "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
     "dev": "npm run dev:elec & npm run dev:web &",
-    "dev:web": "TARGET=web webpack-dev-server --config ./webpack/webpack.renderer.config.js",
+    "dev:web": "cross-env TARGET=web webpack-dev-server --config ./webpack/webpack.renderer.config.js",
     "dev:elec": "node ./webpack/dev",
     "pro": "npm run pro:main && npm run pro:renderer && npm run pro:web",
-    "pro:web": "NODE_ENV=production TARGET=web webpack --progress --colors --config ./webpack/webpack.renderer.config.js",
-    "pro:main": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.main.config.js",
-    "pro:renderer": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.renderer.config.js"
+    "pro:web": "cross-env NODE_ENV=production TARGET=web webpack --progress --colors --config ./webpack/webpack.renderer.config.js",
+    "pro:main": "cross-env NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.main.config.js",
+    "pro:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.renderer.config.js"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -40,6 +40,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chalk": "^2.3.0",
+    "cross-env": "^5.1.3",
     "css-loader": "^0.28.8",
     "del": "^3.0.0",
     "electron": "~1.7.11",
