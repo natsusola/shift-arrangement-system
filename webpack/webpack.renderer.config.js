@@ -71,13 +71,22 @@ let config = {
       {
         test: /\.scss$/,
         use: extractSCSS.extract({
-          use: [ 'css-loader', 'sass-loader' ]
+          use: [
+            {
+              loader: 'css-loader',
+              options: { minimize: !__DEBUG__, }
+            },
+            { loader: 'sass-loader', }
+          ]
         })
       },
       {
         test: /\.css$/,
         use: extractCSS.extract({
-          use: [ 'css-loader' ]
+          use: [{
+            loader: 'css-loader',
+            options: { minimize: !__DEBUG__ }
+          }]
         })
       },
       {

@@ -1,7 +1,7 @@
 <template>
   <div class="home-wrap">
     <h3>
-      <span>列表</span>
+      <span>排班系統</span>
       <i id="github-icon"
         class="fa fa-github icon-btn" aria-hidden="true"
         @click="doOpenLink('https://github.com/natsusola/shift-arrangment-system')">
