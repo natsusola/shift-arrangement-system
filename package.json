@@ -2,7 +2,7 @@
   "name": "shift-arrangment",
   "version": "1.0.0",
   "description": "A shift arrangment system",
-  "main": "./dist/main.js",
+  "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
     "dev": "npm run dev:elec & npm run dev:web &",
@@ -25,9 +25,12 @@
       "output": "build"
     },
     "files": [
-      "dist/*",
-      "dist/**/*"
-    ]
+      "dist/electron/*",
+      "dist/electron/**/*"
+    ],
+    "win": {
+      "target": "portable"
+    }
   },
   "author": "Natsu",
   "license": "CC0-1.0",
@@ -77,12 +80,9 @@
     "file-saver": "^1.3.3",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
-    "leveldown": "^2.1.1",
-    "levelup": "^2.0.1",
     "lodash": "^4.17.4",
     "moment": "^2.20.1",
     "popper.js": "^1.12.9",
-    "pouchdb": "^6.4.1",
     "pouchdb-browser": "^6.4.1",
     "pouchdb-find": "^6.4.1",
     "tether": "^1.4.3",

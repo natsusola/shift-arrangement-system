@@ -14,7 +14,8 @@ const rendererConfig = require('./webpack.renderer.config');
 build();
 
 function build() {
-  del.sync(['dist/*']);
+  del.sync(['dist/electron/*']);
+  del.sync(['build/*']);
   const tasks = ['main', 'renderer'];
 
   const m = new Multispinner(tasks, {
