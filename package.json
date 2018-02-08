@@ -1,7 +1,7 @@
 {
-  "name": "shift-arrangment",
+  "name": "shift-arrangement",
   "version": "1.0.0",
-  "description": "A shift arrangment system",
+  "description": "A shift arrangement system",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node ./webpack/build && ./node_modules/.bin/electron-builder ",
@@ -19,8 +19,8 @@
     "Vue"
   ],
   "build": {
-    "productName": "shift-arrangment",
-    "appId": "natsu.shift-arrangment",
+    "productName": "shift-arrangement",
+    "appId": "natsu.shift-arrangement",
     "directories": {
       "output": "build"
     },

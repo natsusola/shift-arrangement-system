@@ -4,7 +4,7 @@
       <span>排班系統</span>
       <i id="github-icon"
         class="fa fa-github icon-btn" aria-hidden="true"
-        @click="doOpenLink('https://github.com/natsusola/shift-arrangment-system')">
+        @click="doOpenLink('https://github.com/natsusola/shift-arrangement-system')">
       </i>
     </h3>
     <div class="m-b-px-10">
