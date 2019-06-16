@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 const winURL = process.env.NODE_ENV !== 'production'
   ? 'http://localhost:9090'
-  : `file://${__dirname}/index.html`;
+  : `file://${path.resolve(__dirname, 'renderer')}/index.html`;
 
 function createWindow () {
   // Create the browser window.
