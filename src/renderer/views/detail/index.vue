@@ -36,6 +36,7 @@
         </member-col>
 
         <event-col
+          ref="eventCol"
           :events.sync="events"
           :members.sync="members"
           :membersIndex.sync="membersIndex"
@@ -158,7 +159,7 @@
           { key: '_INDEX_', name: '#', cols: { wch: 5 } },
           { key: 'name', name: '活動名稱', cols: { wch: 20 } },
           { key: 'memberCount', name: '需求人數', cols: { wch: 10 } },
-          ..._.map(new Array(this.eventTable.maxCount), (m, i) => ({
+          ..._.map(new Array(this.$refs.eventCol.getEventTableMaxCount()), (m, i) => ({
             key: '', name: `人員${i + 1}`, cols: { wch: 25 }
           }))
         ];

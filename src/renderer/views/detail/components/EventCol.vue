@@ -228,6 +228,9 @@
           _reader.readAsBinaryString(e.target.files[0]);
         }
       },
+      getEventTableMaxCount() {
+        return this.eventTable.maxCount;
+      },
     },
     filters: {
       computeEventMembersLen(memberIds) {
